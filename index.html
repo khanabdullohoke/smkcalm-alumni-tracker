@@ -234,6 +234,9 @@ a{text-decoration:none;color:inherit}
 .submit-info{display:flex;align-items:flex-start;gap:8px;margin-top:12px;padding:11px 13px;background:var(--cream);border-radius:10px}
 .submit-info span{font-size:11px;color:var(--text-muted);line-height:1.6}
 
+/* note jurusan lainnya */
+.jurusan-note{font-size:11px;color:var(--text-muted);margin-top:4px;line-height:1.5;background:var(--blue-pale);padding:6px 10px;border-radius:8px;border-left:3px solid var(--blue-light)}
+
 /* Success overlay */
 #success-overlay{display:none;position:fixed;inset:0;z-index:2000;background:linear-gradient(140deg,#061e5c,#0b3d91,#1e88e5);overflow-y:auto}
 #success-overlay.show{display:flex;align-items:center;justify-content:center;min-height:100vh}
@@ -450,7 +453,7 @@ a{text-decoration:none;color:inherit}
         <p class="section-sub">Sejak 1996, kami telah mencetak ribuan lulusan berkualitas yang berdampak di masyarakat.</p>
       </div>
       <div class="timeline-list reveal">
-        <div class="tl-item"><div class="tl-dot" style="background:var(--gold);box-shadow:0 0 0 6px rgba(255,179,0,.2)"></div><div class="tl-card"><div class="tl-year">📅 1996 — Angkatan Pertama</div><div class="tl-title">SMK CALM Berdiri &amp; Wisuda Perdana</div><div class="tl-desc">Angkatan pertama diwisuda dengan program TKJ dan AKL. Banyak yang langsung terserap industri lokal Garut &amp; Bandung.</div></div></div>
+        <div class="tl-item"><div class="tl-dot" style="background:var(--gold);box-shadow:0 0 0 6px rgba(255,179,0,.2)"></div><div class="tl-card"><div class="tl-year">📅 1996 — Angkatan Pertama</div><div class="tl-title">SMK CALM Berdiri &amp; Wisuda Perdana</div><div class="tl-desc">Angkatan pertama diwisuda dengan program Akuntansi dan Teknik. Banyak yang langsung terserap industri lokal Garut &amp; Bandung.</div></div></div>
         <div class="tl-item"><div class="tl-dot"></div><div class="tl-card"><div class="tl-year">📅 2005 — Milestone 1.000 Alumni</div><div class="tl-title">Seribu Lulusan, Seribu Mimpi</div><div class="tl-desc">Alumni ke-1000 diwisuda. Beberapa alumni awal telah mendirikan UMKM dan merekrut adik-adik alumninya sendiri.</div></div></div>
         <div class="tl-item"><div class="tl-dot"></div><div class="tl-card"><div class="tl-year">📅 2015 — Ekspansi Nasional</div><div class="tl-title">Alumni Tersebar ke Seluruh Nusantara</div><div class="tl-desc">Alumni CALM mulai masuk BUMN, TNI/Polri, dan perusahaan nasional. Program magang ke Jepang dan Korea pertama kali dibuka.</div></div></div>
         <div class="tl-item"><div class="tl-dot"></div><div class="tl-card"><div class="tl-year">📅 2021 — Beasiswa Internasional</div><div class="tl-title">Alumni Raih Beasiswa Pukyong National University</div><div class="tl-desc">Pertama kali alumni CALM berhasil meraih beasiswa S1 di Korea Selatan — membuktikan kualitas lulusan kami di kancah internasional.</div></div></div>
@@ -469,8 +472,8 @@ a{text-decoration:none;color:inherit}
       </div>
       <div id="stories-grid" class="stories-grid reveal">
         <article class="story-card">
-          <div class="story-header" style="background:linear-gradient(135deg,var(--blue-mid),var(--blue-bright))"><div class="story-avatar">RH</div><div><div class="story-name">Rizky Hidayatulloh</div><div class="story-jurusan">Alumni TKJ · Angkatan 2018</div></div></div>
-          <div class="story-body"><div class="story-badge">💻 Software Engineer</div><p class="story-quote">"SMK CALM mengajarkan saya fondasi IT yang kuat. Sekarang saya kerja di startup fintech Jakarta dan terus berkembang setiap hari."</p><div class="story-location">📍 Jakarta Selatan, DKI Jakarta</div></div>
+          <div class="story-header" style="background:linear-gradient(135deg,var(--blue-mid),var(--blue-bright))"><div class="story-avatar">RH</div><div><div class="story-name">Rizky Hidayatulloh</div><div class="story-jurusan">Alumni TJK · Angkatan 2018</div></div></div>
+          <div class="story-body"><div class="story-badge">💻 Network Engineer</div><p class="story-quote">"SMK CALM mengajarkan saya fondasi jaringan yang kuat. Sekarang saya kerja di perusahaan IT Jakarta dan terus berkembang setiap hari."</p><div class="story-location">📍 Jakarta Selatan, DKI Jakarta</div></div>
         </article>
         <article class="story-card">
           <div class="story-header" style="background:linear-gradient(135deg,#7b1fa2,#ab47bc)"><div class="story-avatar">NF</div><div><div class="story-name">Nisa Fauziah</div><div class="story-jurusan">Alumni DKV · Angkatan 2019</div></div></div>
@@ -589,18 +592,25 @@ a{text-decoration:none;color:inherit}
         <div class="fields-row-2">
           <div class="field-group">
             <label class="field-label" for="f-jurusan">Program Keahlian / Jurusan <span class="req">*</span></label>
+            <!--
+              DAFTAR JURUSAN RESMI SMK CILEDUG AL-MUSADDADIYAH
+              Urutan: jurusan aktif saat ini → Lainnya (untuk nama lama / perubahan)
+            -->
             <select id="f-jurusan" class="field-select" required>
               <option value="">Pilih jurusan...</option>
-              <option>Teknik Komputer dan Jaringan (TKJ)</option>
-              <option>Desain Komunikasi Visual (DKV)</option>
-              <option>Akuntansi dan Keuangan Lembaga (AKL)</option>
-              <option>Teknik Kendaraan Ringan (TKR)</option>
-              <option>Bisnis Daring dan Pemasaran (BDP)</option>
-              <option>Perhotelan</option>
-              <option>Agribisnis Tanaman Pangan</option>
-              <option>Lainnya</option>
+              <option value="Akuntansi Keuangan Lembaga">📊 Akuntansi Keuangan Lembaga (AKL)</option>
+              <option value="Bisnis Digital">🛒 Bisnis Digital (BD)</option>
+              <option value="Manajemen Perkantoran">🗂️ Manajemen Perkantoran (MP)</option>
+              <option value="Desain Komunikasi Visual">🎨 Desain Komunikasi Visual (DKV)</option>
+              <option value="Teknik Jaringan Komputer">💻 Teknik Jaringan Komputer (TJK)</option>
+              <option value="Teknik Kendaraan Ringan">🚗 Teknik Kendaraan Ringan (TKR)</option>
+              <option value="Teknik Sepeda Motor">🏍️ Teknik Sepeda Motor (TSM)</option>
+              <option value="Lainnya">💬 Lainnya (nama jurusan lama / perubahan kurikulum)</option>
             </select>
             <div class="field-error" id="err-jurusan">Jurusan wajib dipilih.</div>
+            <div id="jurusan-note" class="jurusan-note" style="display:none">
+              💡 Contoh: TKJ (Teknik Komputer &amp; Jaringan), Multimedia, BDP, Pemasaran, dll. Tulis nama jurusan lamamu di kolom "Pengalaman" jika berbeda.
+            </div>
           </div>
           <div class="field-group">
             <label class="field-label" for="f-tahun">Tahun Lulus <span class="req">*</span></label>
@@ -683,7 +693,7 @@ a{text-decoration:none;color:inherit}
 
 <!-- FOOTER -->
 <footer id="alumni-footer">
-  <p>© 2025 <strong style="color:rgba(255,255,255,.55)">SMK Ciledug Al-Musaddadiyah</strong> — Alumni Tracker v2.0</p>
+  <p>© 2025 <strong style="color:rgba(255,255,255,.55)">SMK Ciledug Al-Musaddadiyah</strong> — Alumni Tracker v2.1</p>
   <p>
     <a onclick="showPage('dashboard')">Dashboard Alumni</a> ·
     <a onclick="showPage('form')">Form Pendaftaran</a> ·
@@ -722,6 +732,58 @@ a{text-decoration:none;color:inherit}
    CONFIG
 ──────────────────────────────────────── */
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwsDt6g2juUvAdfXlfaBbCBJVDh0SpuI9UDrbhMrXt0Z2dVUSQ4oETrO-JIFIBI4mLwsA/exec';
+
+/*
+  DAFTAR JURUSAN RESMI SMK CALM
+  Digunakan untuk normalisasi nama jurusan dari data lama di Google Sheets
+  agar bar chart tampil rapi tanpa duplikasi (misal "TKJ" & "Teknik Komputer
+  dan Jaringan" digabung ke "Teknik Jaringan Komputer").
+*/
+const JURUSAN_MAP = {
+  // Akuntansi Keuangan Lembaga
+  'akuntansi keuangan lembaga' : 'Akuntansi Keuangan Lembaga',
+  'akl'                        : 'Akuntansi Keuangan Lembaga',
+  'akuntansi'                  : 'Akuntansi Keuangan Lembaga',
+
+  // Bisnis Digital
+  'bisnis digital'             : 'Bisnis Digital',
+  'bd'                         : 'Bisnis Digital',
+  'bisnis daring dan pemasaran': 'Bisnis Digital',
+  'bdp'                        : 'Bisnis Digital',
+  'pemasaran'                  : 'Bisnis Digital',
+
+  // Manajemen Perkantoran
+  'manajemen perkantoran'      : 'Manajemen Perkantoran',
+  'mp'                         : 'Manajemen Perkantoran',
+  'otomatisasi tata kelola perkantoran': 'Manajemen Perkantoran',
+  'otkp'                       : 'Manajemen Perkantoran',
+  'administrasi perkantoran'   : 'Manajemen Perkantoran',
+
+  // Desain Komunikasi Visual
+  'desain komunikasi visual'   : 'Desain Komunikasi Visual',
+  'dkv'                        : 'Desain Komunikasi Visual',
+  'multimedia'                 : 'Desain Komunikasi Visual',
+
+  // Teknik Jaringan Komputer
+  'teknik jaringan komputer'   : 'Teknik Jaringan Komputer',
+  'tjk'                        : 'Teknik Jaringan Komputer',
+  'teknik komputer dan jaringan': 'Teknik Jaringan Komputer',
+  'tkj'                        : 'Teknik Jaringan Komputer',
+
+  // Teknik Kendaraan Ringan
+  'teknik kendaraan ringan'    : 'Teknik Kendaraan Ringan',
+  'tkr'                        : 'Teknik Kendaraan Ringan',
+
+  // Teknik Sepeda Motor
+  'teknik sepeda motor'        : 'Teknik Sepeda Motor',
+  'tsm'                        : 'Teknik Sepeda Motor',
+};
+
+function normalizeJurusan(raw) {
+  if (!raw) return 'Lainnya';
+  const key = raw.trim().toLowerCase();
+  return JURUSAN_MAP[key] || raw.trim();
+}
 
 /* ────────────────────────────────────────
    PAGE SWITCHER
@@ -806,6 +868,12 @@ function updateStep(n) {
 document.getElementById('f-status')?.addEventListener('focus', () => updateStep(3));
 ['f-pengalaman', 'f-pesan'].forEach(id => {
   document.getElementById(id)?.addEventListener('focus', () => updateStep(4));
+});
+
+/* Tampilkan note jika pilih "Lainnya" di jurusan */
+document.getElementById('f-jurusan')?.addEventListener('change', function() {
+  const note = document.getElementById('jurusan-note');
+  if (note) note.style.display = this.value === 'Lainnya' ? 'block' : 'none';
 });
 
 /* ────────────────────────────────────────
@@ -959,7 +1027,7 @@ function closeSuccess() {
   document.getElementById('success-overlay').classList.remove('show');
   document.body.style.overflow = '';
   showPage('dashboard');
-  loadAlumniData(); /* refresh data setelah pendaftaran */
+  loadAlumniData();
 }
 
 function shareWhatsApp() {
@@ -984,6 +1052,16 @@ async function loadAlumniData() {
     const d = await res.json();
 
     if (d.error) { showDataError('Gagal memuat: ' + d.error); return; }
+
+    /* Normalisasi data jurusan dari sheet sebelum ditampilkan */
+    if (d.jurusan) {
+      const normalized = {};
+      Object.entries(d.jurusan).forEach(([k, v]) => {
+        const key = normalizeJurusan(k);
+        normalized[key] = (normalized[key] || 0) + v;
+      });
+      d.jurusan = normalized;
+    }
 
     /* Hero counters */
     updateHeroCounter('[data-id="total"]', d.total || 0, '');
@@ -1013,7 +1091,7 @@ async function loadAlumniData() {
 
   } catch (e) {
     showDataError('Koneksi gagal — menampilkan data estimasi');
-    /* Fallback data statis */
+    /* Fallback data statis sesuai jurusan resmi */
     updateHeroCounter('[data-id="total"]', 2847, '');
     updateHeroCounter('[data-id="terserap"]', 87, '%');
     updateHeroCounter('[data-id="angkatan"]', 28, '');
@@ -1023,7 +1101,13 @@ async function loadAlumniData() {
     updateBigNum('[data-id="berwirausaha"]', 134);
 
     const jurusanStatis = {
-      'TKJ': 820, 'AKL': 640, 'DKV': 420, 'TKR': 380, 'BDP': 310, 'Perhotelan': 180, 'Lainnya': 93
+      'Akuntansi Keuangan Lembaga' : 680,
+      'Teknik Jaringan Komputer'   : 620,
+      'Desain Komunikasi Visual'   : 440,
+      'Teknik Kendaraan Ringan'    : 380,
+      'Bisnis Digital'             : 310,
+      'Manajemen Perkantoran'      : 260,
+      'Teknik Sepeda Motor'        : 157,
     };
     updateBarChart(jurusanStatis);
     updateDonut({ bekerja: 1423, berwirausaha: 134, kuliah: 612, lainnya: 234 });
@@ -1064,11 +1148,12 @@ function updateBarChart(jurusanData) {
     'linear-gradient(90deg,#e65100,#ff6d00)',
     'linear-gradient(90deg,#ffb300,#ffd54f)',
     'linear-gradient(90deg,#0097a7,#00bcd4)',
-    'linear-gradient(90deg,#33691e,#558b2f)'
+    'linear-gradient(90deg,#33691e,#558b2f)',
+    'linear-gradient(90deg,#ad1457,#ec407a)'
   ];
-  container.innerHTML = sorted.slice(0, 7).map(([nama, jumlah], i) => {
+  container.innerHTML = sorted.slice(0, 8).map(([nama, jumlah], i) => {
     const pct = Math.round((jumlah / max) * 100);
-    const shortName = nama.length > 14 ? nama.substring(0, 14) + '…' : nama;
+    const shortName = nama.length > 16 ? nama.substring(0, 16) + '…' : nama;
     return `<div class="bar-row"><div class="bar-label">${shortName}</div><div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${colors[i % colors.length]}">${jumlah}</div></div><div class="bar-pct">${jumlah}</div></div>`;
   }).join('');
 }
@@ -1094,10 +1179,10 @@ function updateDonut(d) {
 
   const pct = (v) => ((v / total) * 100).toFixed(1) + '%';
   const legends = {
-    'legend-bekerja': pct(d.bekerja || 0),
+    'legend-bekerja'  : pct(d.bekerja || 0),
     'legend-wirausaha': pct(d.berwirausaha || 0),
-    'legend-kuliah': pct(d.kuliah || 0),
-    'legend-lainnya': pct(d.lainnya || 0)
+    'legend-kuliah'   : pct(d.kuliah || 0),
+    'legend-lainnya'  : pct(d.lainnya || 0)
   };
   Object.entries(legends).forEach(([id, val]) => {
     const el = document.getElementById(id);
