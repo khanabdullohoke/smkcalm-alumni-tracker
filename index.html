@@ -807,10 +807,10 @@ if(iframe){
    Ganti APPS_SCRIPT_URL dengan URL deployment Anda
    ══════════════════════════════════════════════════════ */
 
-const APPS_SCRIPT_URL = 'GANTI_DENGAN_URL_APPS_SCRIPT_ANDA';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzudD0lCw5GF-ED1Au4wFj-kFxF8lB3pXycEXZUck3EBY97f-I6yRJ40WREhE3jNzgOxg/exec';
 
 async function loadAlumniData() {
-  if (APPS_SCRIPT_URL === 'GANTI_DENGAN_URL_APPS_SCRIPT_ANDA') return; // belum diset
+  if (APPS_SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbzudD0lCw5GF-ED1Au4wFj-kFxF8lB3pXycEXZUck3EBY97f-I6yRJ40WREhE3jNzgOxg/exec') return; // belum diset
 
   try {
     const res = await fetch(APPS_SCRIPT_URL);
