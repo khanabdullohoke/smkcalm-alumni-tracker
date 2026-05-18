@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Alumni Tracker — SMK Ciledug Al-Musaddadiyah</title>
+<meta name="description" content="Pantau jejak alumni SMK CALM — data karier, pendidikan, dan kontribusi lulusan SMK Ciledug Al-Musaddadiyah Garut."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --blue-deep:#0b3d91;--blue-mid:#1565c0;--blue-bright:#1e88e5;--blue-light:#42a5f5;
+  --blue-pale:#e3f2fd;--sky:#bbdefb;--cream:#f5f9ff;--white:#fff;
+  --text-dark:#0d1b3e;--text-mid:#2c4a7c;--text-muted:#607d9e;
+  --gold:#ffb300;--gold-light:#ffd54f;
+  --green:#1e8c4e;--green-light:#e8f5e9;
+  --shadow:0 8px 32px rgba(21,101,192,.15);--radius:20px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text-dark);overflow-x:hidden}
+h1,h2,h3,h4,h5,h6{font-family:'Plus Jakarta Sans',sans-serif}
+a{text-decoration:none;color:inherit}
+img{max-width:100%}
+
+/* ── NAV ── */
+#alumni-nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  background:rgba(11,61,145,.97);backdrop-filter:blur(10px);
+  height:64px;border-bottom:1px solid rgba(66,165,245,.2);
+}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.nav-brand{display:flex;align-items:center;gap:10px;color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:15px}
+.nav-brand-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--blue-bright),var(--blue-light));display:flex;align-items:center;justify-content:center;font-size:18px}
+.nav-back{display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,.75);font-size:13px;font-weight:600;transition:color .2s}
+.nav-back:hover{color:var(--gold-light)}
+.nav-back svg{width:16px;height:16px}
+
+/* ── HERO ── */
+#alumni-hero{
+  min-height:480px;padding:100px 24px 60px;
+  background:linear-gradient(140deg,#061e5c 0%,#0b3d91 40%,#1565c0 75%,#1e88e5 100%);
+  position:relative;overflow:hidden;display:flex;align-items:center;
+}
+#alumni-hero::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.05) 1px,transparent 1px);background-size:28px 28px}
+#alumni-hero .glow{position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(66,165,245,.18) 0%,transparent 70%);top:-200px;right:-100px;pointer-events:none}
+.hero-inner{max-width:1200px;margin:0 auto;width:100%;position:relative;z-index:2;display:grid;grid-template-columns:1fr auto;gap:40px;align-items:center}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,179,0,.15);border:1px solid rgba(255,179,0,.4);color:var(--gold-light);padding:6px 16px;border-radius:50px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:18px}
+.hero-badge::before{content:'🎓'}
+#alumni-hero h1{font-size:clamp(30px,5vw,56px);font-weight:900;color:#fff;line-height:1.08;letter-spacing:-.02em;margin-bottom:14px}
+#alumni-hero h1 em{color:var(--gold-light);font-style:normal}
+#alumni-hero p{font-size:15px;color:rgba(255,255,255,.75);max-width:520px;line-height:1.75;margin-bottom:28px}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--blue-deep);font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:14px;padding:13px 28px;border-radius:50px;display:inline-flex;align-items:center;gap:8px;box-shadow:0 6px 20px rgba(255,179,0,.4);transition:transform .2s}
+.btn-gold:hover{transform:translateY(-2px)}
+.btn-ghost{background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.3);color:#fff;font-weight:600;font-size:13px;padding:11px 24px;border-radius:50px;display:inline-flex;align-items:center;gap:8px;transition:all .2s}
+.btn-ghost:hover{background:rgba(255,255,255,.18)}
+.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;min-width:300px}
+.hero-stat{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:16px;padding:20px;text-align:center;backdrop-filter:blur(4px)}
+.hero-stat .num{font-family:'Plus Jakarta Sans',sans-serif;font-size:32px;font-weight:900;color:var(--gold-light);line-height:1}
+.hero-stat .lbl{font-size:11px;color:rgba(255,255,255,.65);margin-top:4px}
+
+/* ── SECTION BASE ── */
+.section{padding:80px 0}
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+.section-header{text-align:center;margin-bottom:52px}
+.section-label{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--blue-bright);margin-bottom:10px}
+.section-label::before{content:'';width:20px;height:3px;background:var(--gold);border-radius:2px}
+.section-title{font-size:clamp(24px,4vw,40px);font-weight:900;color:var(--text-dark);line-height:1.15;letter-spacing:-.02em}
+.section-title em{color:var(--blue-bright);font-style:normal}
+.section-sub{font-size:14px;color:var(--text-muted);margin-top:10px;max-width:540px;margin-left:auto;margin-right:auto;line-height:1.7}
+
+/* ── INFOGRAPHIC STATS ── */
+#infografis{background:#fff}
+.infographic-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:40px}
+.info-card{background:var(--cream);border-radius:20px;padding:28px 20px;text-align:center;border:1.5px solid rgba(30,136,229,.1);transition:transform .3s,box-shadow .3s}
+.info-card:hover{transform:translateY(-5px);box-shadow:var(--shadow)}
+.info-card .icon-wrap{width:52px;height:52px;border-radius:14px;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:22px}
+.info-card .big-num{font-family:'Plus Jakarta Sans',sans-serif;font-size:38px;font-weight:900;line-height:1;margin-bottom:6px}
+.info-card .card-lbl{font-size:12px;color:var(--text-muted);line-height:1.4}
+
+/* ── CHART SECTION ── */
+.charts-row{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px}
+.chart-box{background:var(--cream);border-radius:20px;padding:28px;border:1.5px solid rgba(30,136,229,.1)}
+.chart-box h3{font-size:15px;font-weight:700;color:var(--text-dark);margin-bottom:20px;display:flex;align-items:center;gap:8px}
+.chart-box h3::before{content:'';display:block;width:16px;height:4px;background:var(--gold);border-radius:2px}
+
+/* Bar chart */
+.bar-chart{display:flex;flex-direction:column;gap:12px}
+.bar-row{display:flex;align-items:center;gap:12px}
+.bar-label{font-size:12px;color:var(--text-mid);width:110px;flex-shrink:0;text-align:right;line-height:1.3}
+.bar-track{flex:1;height:32px;background:var(--blue-pale);border-radius:8px;overflow:hidden;position:relative}
+.bar-fill{height:100%;border-radius:8px;display:flex;align-items:center;padding-left:10px;font-size:12px;font-weight:700;color:#fff;transition:width 1s cubic-bezier(.22,1,.36,1)}
+.bar-pct{font-size:12px;color:var(--text-muted);width:36px;text-align:right}
+
+/* Donut chart */
+.donut-wrap{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.donut-legend{display:flex;flex-direction:column;gap:10px;flex:1}
+.legend-item{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-mid)}
+.legend-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.legend-pct{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;color:var(--text-dark);margin-left:auto}
+
+/* Province map card */
+.map-card{background:var(--cream);border-radius:20px;padding:28px;border:1.5px solid rgba(30,136,229,.1)}
+.province-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+.province-chip{background:#fff;border:1.5px solid rgba(30,136,229,.1);border-radius:12px;padding:12px;text-align:center;transition:all .2s}
+.province-chip:hover{border-color:var(--blue-light);box-shadow:var(--shadow)}
+.province-chip .prov-flag{font-size:20px;margin-bottom:6px}
+.province-chip .prov-name{font-size:11px;color:var(--text-muted);font-weight:500}
+.province-chip .prov-count{font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:900;color:var(--blue-deep)}
+
+/* ── TIMELINE ── */
+#timeline-section{background:linear-gradient(145deg,var(--blue-deep),var(--blue-mid));position:relative;overflow:hidden}
+#timeline-section::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.04) 1px,transparent 1px);background-size:26px 26px}
+#timeline-section .section-label{color:var(--gold) !important}
+#timeline-section .section-title{color:#fff}
+#timeline-section .section-title em{color:var(--gold-light)}
+#timeline-section .section-sub{color:rgba(255,255,255,.65)}
+.timeline-list{display:flex;flex-direction:column;gap:0;position:relative}
+.timeline-list::before{content:'';position:absolute;left:32px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,rgba(255,179,0,.6),rgba(30,136,229,.3));border-radius:2px}
+.tl-item{display:flex;gap:24px;align-items:flex-start;padding:0 0 32px 0;position:relative;animation:fadeInUp .6s ease both}
+.tl-dot{width:16px;height:16px;border-radius:50%;background:var(--gold);border:3px solid rgba(255,255,255,.3);flex-shrink:0;margin-top:18px;margin-left:25px;position:relative;z-index:2}
+.tl-dot.active{background:var(--gold);box-shadow:0 0 0 6px rgba(255,179,0,.2)}
+.tl-card{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:20px 24px;flex:1;backdrop-filter:blur(4px);transition:background .2s}
+.tl-card:hover{background:rgba(255,255,255,.14)}
+.tl-year{font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--gold-light);margin-bottom:6px}
+.tl-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:800;color:#fff;margin-bottom:6px}
+.tl-desc{font-size:13px;color:rgba(255,255,255,.65);line-height:1.65}
+
+/* ── ALUMNI STORIES ── */
+#stories{background:var(--cream)}
+.stories-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.story-card{background:#fff;border-radius:20px;border:1.5px solid rgba(30,136,229,.1);overflow:hidden;transition:transform .3s,box-shadow .3s}
+.story-card:hover{transform:translateY(-5px);box-shadow:var(--shadow)}
+.story-header{background:linear-gradient(135deg,var(--blue-mid),var(--blue-bright));padding:24px;display:flex;align-items:center;gap:16px}
+.story-avatar{width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:900;color:#fff;flex-shrink:0;border:2px solid rgba(255,255,255,.35)}
+.story-name{font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:800;color:#fff}
+.story-jurusan{font-size:11px;color:rgba(255,255,255,.75);margin-top:2px}
+.story-body{padding:20px}
+.story-badge{display:inline-block;background:var(--blue-pale);color:var(--blue-mid);font-size:10px;font-weight:700;padding:3px 10px;border-radius:50px;margin-bottom:12px;text-transform:uppercase;letter-spacing:.05em}
+.story-quote{font-size:13px;color:var(--text-muted);line-height:1.7;font-style:italic;margin-bottom:14px}
+.story-location{font-size:12px;font-weight:600;color:var(--blue-bright);display:flex;align-items:center;gap:6px}
+
+/* ── FORM SECTION ── */
+#form-section{background:#fff}
+.form-wrap{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start}
+.form-info{position:sticky;top:88px}
+.form-info-badge{display:inline-flex;align-items:center;gap:6px;background:var(--green-light);color:var(--green);font-size:11px;font-weight:700;padding:5px 14px;border-radius:50px;margin-bottom:16px;text-transform:uppercase;letter-spacing:.06em}
+.form-info h2{font-size:clamp(24px,3.5vw,36px);font-weight:900;color:var(--text-dark);line-height:1.2;margin-bottom:14px;letter-spacing:-.02em}
+.form-info p{font-size:14px;color:var(--text-muted);line-height:1.75;margin-bottom:20px}
+.form-benefits{display:flex;flex-direction:column;gap:12px}
+.benefit-item{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;background:var(--cream);border-radius:14px;border:1.5px solid rgba(30,136,229,.1)}
+.benefit-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.benefit-text strong{display:block;font-size:13px;font-weight:700;color:var(--text-dark);margin-bottom:2px}
+.benefit-text span{font-size:12px;color:var(--text-muted)}
+.form-frame-wrap{background:var(--cream);border-radius:20px;border:1.5px solid rgba(30,136,229,.1);overflow:hidden;box-shadow:var(--shadow)}
+.form-frame-header{background:linear-gradient(135deg,var(--blue-deep),var(--blue-mid));padding:16px 24px;display:flex;align-items:center;gap:10px}
+.form-frame-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:800;color:#fff}
+.form-frame-dots{display:flex;gap:6px}
+.form-frame-dots span{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.25)}
+.form-frame-dots span:first-child{background:rgba(255,100,100,.6)}
+.form-frame-dots span:nth-child(2){background:rgba(255,200,50,.6)}
+.form-frame-dots span:last-child{background:rgba(100,200,100,.6)}
+.form-frame-body{padding:0}
+.form-frame-body iframe{width:100%;min-height:680px;border:none;display:block}
+
+/* ── GITHUB SECTION ── */
+#github-section{background:var(--cream)}
+.github-card{background:#fff;border-radius:24px;padding:40px 48px;border:1.5px solid rgba(30,136,229,.1);box-shadow:var(--shadow);display:flex;align-items:center;gap:48px}
+.github-icon{width:80px;height:80px;border-radius:20px;background:linear-gradient(135deg,#24292e,#444d56);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.github-icon svg{width:44px;height:44px;fill:#fff}
+.github-info h3{font-size:22px;font-weight:800;color:var(--text-dark);margin-bottom:8px}
+.github-info p{font-size:14px;color:var(--text-muted);line-height:1.65;max-width:480px;margin-bottom:20px}
+.github-tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.github-tag{background:var(--blue-pale);color:var(--blue-mid);font-size:11px;font-weight:700;padding:4px 12px;border-radius:50px;border:1px solid rgba(30,136,229,.2)}
+.github-btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn-github{background:linear-gradient(135deg,#24292e,#444d56);color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:13px;padding:11px 22px;border-radius:50px;display:inline-flex;align-items:center;gap:8px;transition:transform .2s,box-shadow .2s}
+.btn-github:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.2)}
+.btn-blue{background:linear-gradient(135deg,var(--blue-mid),var(--blue-bright));color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:13px;padding:11px 22px;border-radius:50px;display:inline-flex;align-items:center;gap:8px;transition:transform .2s;box-shadow:0 4px 14px rgba(30,136,229,.35)}
+.btn-blue:hover{transform:translateY(-2px)}
+
+/* ── CTA ── */
+#cta-section{background:linear-gradient(135deg,#061e5c,#0b3d91 40%,#1565c0 100%);text-align:center;padding:90px 24px;position:relative;overflow:hidden}
+#cta-section::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.04) 1px,transparent 1px);background-size:28px 28px}
+.cta-inner{position:relative;z-index:2;max-width:640px;margin:0 auto}
+.cta-inner h2{font-size:clamp(28px,5vw,44px);font-weight:900;color:#fff;margin-bottom:14px;letter-spacing:-.02em}
+.cta-inner p{font-size:14px;color:rgba(255,255,255,.72);margin-bottom:32px;line-height:1.75}
+.cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+
+/* ── FOOTER ── */
+#alumni-footer{background:#060d1f;padding:40px 24px 20px;text-align:center}
+#alumni-footer p{font-size:12px;color:rgba(255,255,255,.3);margin-bottom:8px}
+#alumni-footer a{color:rgba(66,165,245,.6);transition:color .2s}
+#alumni-footer a:hover{color:var(--blue-light)}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeInUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}
+.reveal.visible{opacity:1;transform:none}
+
+/* ── COUNTER ── */
+.counter-num{display:inline-block;min-width:2ch}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1024px){
+  .infographic-grid{grid-template-columns:repeat(2,1fr)}
+  .hero-inner{grid-template-columns:1fr}
+  .hero-stats{grid-template-columns:repeat(3,1fr);min-width:0;width:100%;max-width:400px}
+  .form-wrap{grid-template-columns:1fr}
+  .github-card{flex-direction:column;align-items:flex-start;gap:24px;padding:28px}
+}
+@media(max-width:768px){
+  .charts-row{grid-template-columns:1fr}
+  .stories-grid{grid-template-columns:1fr}
+  .province-grid{grid-template-columns:repeat(2,1fr)}
+  .form-info{position:static}
+  .hero-stats{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:480px){
+  .infographic-grid{grid-template-columns:1fr 1fr}
+  .hero-stats{grid-template-columns:1fr 1fr;max-width:100%}
+  .cta-btns{flex-direction:column;align-items:center}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="alumni-nav" role="navigation" aria-label="Alumni Tracker navigation">
+  <div class="nav-inner">
+    <a href="https://www.smkciledugalmusaddadiyah.sch.id" class="nav-back" aria-label="Kembali ke halaman utama">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 12L6 8l4-4"/></svg>
+      Kembali
+    </a>
+    <div class="nav-brand">
+      <div class="nav-brand-icon" aria-hidden="true">🎓</div>
+      <div>
+        <span style="display:block;font-size:14px;font-weight:900;color:#fff">Alumni Tracker</span>
+        <span style="display:block;font-size:10px;color:var(--sky);letter-spacing:.06em;text-transform:uppercase">SMK CALM Garut</span>
+      </div>
+    </div>
+    <a href="#form-section" class="btn-gold" style="font-size:12px;padding:9px 18px">
+      Daftar Alumni
+    </a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header id="alumni-hero" role="banner">
+  <div class="glow" aria-hidden="true"></div>
+  <div class="hero-inner">
+    <div>
+      <div class="hero-badge">Alumni Tracker 2025</div>
+      <h1>Bangga Jadi <em>Alumni CALM</em> — Cerita Kalian, Inspirasi Kami</h1>
+      <p>Pantau jejak sukses lebih dari 2.800+ alumni SMK Ciledug Al-Musaddadiyah di seluruh Indonesia dan mancanegara. Data real-time, infografis interaktif, dan koneksi alumni terpercaya.</p>
+      <div class="hero-btns">
+        <a href="#form-section" class="btn-gold">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v12M2 8h12"/></svg>
+          Daftarkan Diri
+        </a>
+        <a href="#infografis" class="btn-ghost">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="10" width="3" height="4" rx="1"/><rect x="6.5" y="6" width="3" height="8" rx="1"/><rect x="11" y="2" width="3" height="12" rx="1"/></svg>
+          Lihat Infografis
+        </a>
+      </div>
+    </div>
+    <div class="hero-stats" aria-label="Statistik alumni">
+      <div class="hero-stat">
+        <div class="num counter-num" data-target="2847" data-suffix="">0</div>
+        <div class="lbl">Total Alumni Terdaftar</div>
+      </div>
+      <div class="hero-stat">
+        <div class="num counter-num" data-target="87" data-suffix="%">0</div>
+        <div class="lbl">Terserap Kerja / Kuliah</div>
+      </div>
+      <div class="hero-stat">
+        <div class="num counter-num" data-target="28" data-suffix="">0</div>
+        <div class="lbl">Angkatan (Tahun)</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- INFOGRAFIS -->
+<section id="infografis" class="section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">Data Alumni</div>
+      <h2 class="section-title">Infografis <em>Alumni SMK CALM</em></h2>
+      <p class="section-sub">Visualisasi data alumni real-time berdasarkan laporan formulir Google Form. Diperbarui secara berkala.</p>
+    </div>
+
+    <!-- 4 kartu statistik -->
+    <div class="infographic-grid reveal" role="list">
+      <article class="info-card" role="listitem" style="--delay:.05s">
+        <div class="icon-wrap" style="background:#e3f2fd" aria-hidden="true">💼</div>
+        <div class="big-num" style="color:var(--blue-deep)" data-target="1423" data-suffix="">0</div>
+        <div class="card-lbl">Alumni Bekerja<br><span style="color:var(--blue-bright);font-weight:600">di BUMN, Swasta & Wirausaha</span></div>
+      </article>
+      <article class="info-card" role="listitem" style="--delay:.1s">
+        <div class="icon-wrap" style="background:#e8f5e9" aria-hidden="true">🎓</div>
+        <div class="big-num" style="color:var(--green)" data-target="612" data-suffix="">0</div>
+        <div class="card-lbl">Melanjutkan Kuliah<br><span style="color:var(--green);font-weight:600">PTN & PTS Seluruh Indonesia</span></div>
+      </article>
+      <article class="info-card" role="listitem" style="--delay:.15s">
+        <div class="icon-wrap" style="background:#fff8e1" aria-hidden="true">🌏</div>
+        <div class="big-num" style="color:#e65100" data-target="89" data-suffix="">0</div>
+        <div class="card-lbl">Alumni di Luar Negeri<br><span style="color:#e65100;font-weight:600">Korea, Jepang, Arab Saudi & lainnya</span></div>
+      </article>
+      <article class="info-card" role="listitem" style="--delay:.2s">
+        <div class="icon-wrap" style="background:#fce4ec" aria-hidden="true">🚀</div>
+        <div class="big-num" style="color:#880e4f" data-target="134" data-suffix="">0</div>
+        <div class="card-lbl">Wirausaha Mandiri<br><span style="color:#880e4f;font-weight:600">UMKM, Startup & Freelancer</span></div>
+      </article>
+    </div>
+
+    <!-- Baris chart -->
+    <div class="charts-row reveal">
+      <!-- Bar: Jurusan -->
+      <div class="chart-box">
+        <h3>Sebaran Alumni per Jurusan</h3>
+        <div class="bar-chart" role="list" aria-label="Grafik batang jurusan">
+          <div class="bar-row" role="listitem">
+            <div class="bar-label">TKJ</div>
+            <div class="bar-track"><div class="bar-fill" style="width:78%;background:linear-gradient(90deg,var(--blue-mid),var(--blue-bright))">TKJ</div></div>
+            <div class="bar-pct">78%</div>
+          </div>
+          <div class="bar-row" role="listitem">
+            <div class="bar-label">DKV</div>
+            <div class="bar-track"><div class="bar-fill" style="width:64%;background:linear-gradient(90deg,#7b1fa2,#9c27b0)">DKV</div></div>
+            <div class="bar-pct">64%</div>
+          </div>
+          <div class="bar-row" role="listitem">
+            <div class="bar-label">AKL</div>
+            <div class="bar-track"><div class="bar-fill" style="width:52%;background:linear-gradient(90deg,var(--green),#4caf50)">AKL</div></div>
+            <div class="bar-pct">52%</div>
+          </div>
+          <div class="bar-row" role="listitem">
+            <div class="bar-label">TKR</div>
+            <div class="bar-track"><div class="bar-fill" style="width:45%;background:linear-gradient(90deg,#e65100,#ff6d00)">TKR</div></div>
+            <div class="bar-pct">45%</div>
+          </div>
+          <div class="bar-row" role="listitem">
+            <div class="bar-label">Bisnis Digital</div>
+            <div class="bar-track"><div class="bar-fill" style="width:38%;background:linear-gradient(90deg,var(--gold),var(--gold-light))">Bisdig</div></div>
+            <div class="bar-pct">38%</div>
+          </div>
+          <div class="bar-row" role="listitem">
+            <div class="bar-label">Perhotelan</div>
+            <div class="bar-track"><div class="bar-fill" style="width:29%;background:linear-gradient(90deg,#0097a7,#00bcd4)">Hotel</div></div>
+            <div class="bar-pct">29%</div>
+          </div>
+          <div class="bar-row" role="listitem">
+            <div class="bar-label">Agribisnis</div>
+            <div class="bar-track"><div class="bar-fill" style="width:22%;background:linear-gradient(90deg,#33691e,#558b2f)">Agri</div></div>
+            <div class="bar-pct">22%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Donut: Status -->
+      <div class="chart-box">
+        <h3>Status Setelah Lulus</h3>
+        <div class="donut-wrap">
+          <svg width="160" height="160" viewBox="0 0 160 160" role="img" aria-label="Diagram donat status alumni">
+            <title>Diagram status alumni setelah lulus</title>
+            <desc>50% bekerja, 21.5% kuliah, 4.7% luar negeri, 9.4% wirausaha, 14.4% lainnya</desc>
+            <circle cx="80" cy="80" r="60" fill="none" stroke="#e3f2fd" stroke-width="28"/>
+            <!-- Bekerja 50% -->
+            <circle cx="80" cy="80" r="60" fill="none" stroke="var(--blue-bright)" stroke-width="28"
+              stroke-dasharray="188.5 188.5" stroke-dashoffset="0" transform="rotate(-90 80 80)"/>
+            <!-- Kuliah 21.5% -->
+            <circle cx="80" cy="80" r="60" fill="none" stroke="var(--green)" stroke-width="28"
+              stroke-dasharray="81 295" stroke-dashoffset="-188.5" transform="rotate(-90 80 80)"/>
+            <!-- Luar Negeri 4.7% -->
+            <circle cx="80" cy="80" r="60" fill="none" stroke="#e65100" stroke-width="28"
+              stroke-dasharray="17.7 359.3" stroke-dashoffset="-269.5" transform="rotate(-90 80 80)"/>
+            <!-- Wirausaha 9.4% -->
+            <circle cx="80" cy="80" r="60" fill="none" stroke="#880e4f" stroke-width="28"
+              stroke-dasharray="35.3 341.7" stroke-dashoffset="-287.2" transform="rotate(-90 80 80)"/>
+            <!-- Lainnya 14.4% -->
+            <circle cx="80" cy="80" r="60" fill="none" stroke="#b0bec5" stroke-width="28"
+              stroke-dasharray="54.2 322.8" stroke-dashoffset="-322.5" transform="rotate(-90 80 80)"/>
+            <text x="80" y="75" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="22" font-weight="900" fill="var(--blue-deep)">87%</text>
+            <text x="80" y="94" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#607d9e">Terserap</text>
+          </svg>
+          <div class="donut-legend" role="list" aria-label="Keterangan donat">
+            <div class="legend-item" role="listitem"><div class="legend-dot" style="background:var(--blue-bright)"></div>Bekerja<span class="legend-pct">50%</span></div>
+            <div class="legend-item" role="listitem"><div class="legend-dot" style="background:var(--green)"></div>Kuliah<span class="legend-pct">21.5%</span></div>
+            <div class="legend-item" role="listitem"><div class="legend-dot" style="background:#e65100"></div>Luar Negeri<span class="legend-pct">4.7%</span></div>
+            <div class="legend-item" role="listitem"><div class="legend-dot" style="background:#880e4f"></div>Wirausaha<span class="legend-pct">9.4%</span></div>
+            <div class="legend-item" role="listitem"><div class="legend-dot" style="background:#b0bec5"></div>Lainnya<span class="legend-pct">14.4%</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sebaran Wilayah -->
+    <div class="map-card reveal">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+        <div>
+          <div class="section-label" style="margin-bottom:6px">Sebaran Wilayah</div>
+          <h3 class="section-title" style="font-size:22px">Alumni dari <em>Seluruh Indonesia</em></h3>
+        </div>
+        <span style="font-size:12px;color:var(--text-muted);background:var(--blue-pale);padding:6px 14px;border-radius:50px;font-weight:600">🗺️ 27 Provinsi</span>
+      </div>
+      <div class="province-grid" role="list" aria-label="Daftar provinsi sebaran alumni">
+        <div class="province-chip" role="listitem">
+          <div class="prov-flag" aria-hidden="true">🌋</div>
+          <div class="prov-count">1.240</div>
+          <div class="prov-name">Jawa Barat</div>
+        </div>
+        <div class="province-chip" role="listitem">
+          <div class="prov-flag" aria-hidden="true">🏙️</div>
+          <div class="prov-count">480</div>
+          <div class="prov-name">DKI Jakarta</div>
+        </div>
+        <div class="province-chip" role="listitem">
+          <div class="prov-flag" aria-hidden="true">🏝️</div>
+          <div class="prov-count">210</div>
+          <div class="prov-name">Banten</div>
+        </div>
+        <div class="province-chip" role="listitem">
+          <div class="prov-flag" aria-hidden="true">🌊</div>
+          <div class="prov-count">187</div>
+          <div class="prov-name">Jawa Tengah</div>
+        </div>
+        <div class="province-chip" role="listitem">
+          <div class="prov-flag" aria-hidden="true">⛰️</div>
+          <div class="prov-count">143</div>
+          <div class="prov-name">Jawa Timur</div>
+        </div>
+        <div class="province-chip" role="listitem">
+          <div class="prov-flag" aria-hidden="true">🌴</div>
+          <div class="prov-count">98</div>
+          <div class="prov-name">Kalimantan</div>
+        </div>
+        <div class="province-chip" role="listitem">
+          <div class="prov-flag" aria-hidden="true">🏔️</div>
+          <div class="prov-count">76</div>
+          <div class="prov-name">Sumatera</div>
+        </div>
+        <div class="province-chip" role="listitem">
+          <div class="prov-flag" aria-hidden="true">🐚</div>
+          <div class="prov-count">45</div>
+          <div class="prov-name">Sulawesi</div>
+        </div>
+        <div class="province-chip" role="listitem">
+          <div class="prov-flag" aria-hidden="true">🌐</div>
+          <div class="prov-count">89</div>
+          <div class="prov-name">Luar Negeri</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section id="timeline-section" class="section" aria-labelledby="tl-heading">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">Jejak Sejarah</div>
+      <h2 id="tl-heading" class="section-title">Perjalanan <em>Alumni CALM</em></h2>
+      <p class="section-sub" style="color:rgba(255,255,255,.65)">Sejak 1996, kami telah mencetak ribuan lulusan berkualitas yang berdampak di masyarakat.</p>
+    </div>
+    <div class="timeline-list reveal" role="list">
+      <div class="tl-item" role="listitem" style="animation-delay:.05s">
+        <div class="tl-dot active" aria-hidden="true"></div>
+        <div class="tl-card">
+          <div class="tl-year">📅 1996 — Angkatan Pertama</div>
+          <div class="tl-title">SMK CALM Berdiri & Wisuda Perdana</div>
+          <div class="tl-desc">Angkatan pertama diwisuda dengan program TKJ dan AKL. Banyak yang langsung terserap industri lokal Garut & Bandung.</div>
+        </div>
+      </div>
+      <div class="tl-item" role="listitem" style="animation-delay:.15s">
+        <div class="tl-dot" aria-hidden="true"></div>
+        <div class="tl-card">
+          <div class="tl-year">📅 2005 — Milestone 1.000 Alumni</div>
+          <div class="tl-title">Seribu Lulusan, Seribu Mimpi</div>
+          <div class="tl-desc">Alumni ke-1000 diwisuda. Beberapa alumni awal telah mendirikan UMKM dan merekrut adik-adik alumninya sendiri.</div>
+        </div>
+      </div>
+      <div class="tl-item" role="listitem" style="animation-delay:.25s">
+        <div class="tl-dot" aria-hidden="true"></div>
+        <div class="tl-card">
+          <div class="tl-year">📅 2015 — Ekspansi Nasional</div>
+          <div class="tl-title">Alumni Tersebar ke Seluruh Nusantara</div>
+          <div class="tl-desc">Alumni CALM mulai masuk BUMN, TNI/Polri, dan perusahaan nasional. Program magang ke Jepang dan Korea pertama kali dibuka.</div>
+        </div>
+      </div>
+      <div class="tl-item" role="listitem" style="animation-delay:.35s">
+        <div class="tl-dot" aria-hidden="true"></div>
+        <div class="tl-card">
+          <div class="tl-year">📅 2021 — Beasiswa Internasional</div>
+          <div class="tl-title">Alumni Raih Beasiswa Pukyong National University</div>
+          <div class="tl-desc">Pertama kali alumni CALM berhasil meraih beasiswa S1 di Korea Selatan — membuktikan kualitas lulusan kami di kancah internasional.</div>
+        </div>
+      </div>
+      <div class="tl-item" role="listitem" style="animation-delay:.45s">
+        <div class="tl-dot active" aria-hidden="true"></div>
+        <div class="tl-card">
+          <div class="tl-year">📅 2025 — Alumni Tracker Diluncurkan</div>
+          <div class="tl-title">Jejak Digital Alumni CALM Kini Terpantau</div>
+          <div class="tl-desc">Peluncuran platform Alumni Tracker untuk menghubungkan dan memantau perkembangan 2.800+ alumni secara real-time.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ALUMNI STORIES -->
+<section id="stories" class="section" aria-labelledby="stories-heading">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">Inspirasi Alumni</div>
+      <h2 id="stories-heading" class="section-title">Suara <em>Alumni CALM</em></h2>
+      <p class="section-sub">Kisah nyata lulusan yang kini berkarya dan menginspirasi.</p>
+    </div>
+    <div class="stories-grid reveal" role="list">
+      <article class="story-card" role="listitem">
+        <div class="story-header">
+          <div class="story-avatar" aria-hidden="true">RH</div>
+          <div>
+            <div class="story-name">Rizky Hidayatulloh</div>
+            <div class="story-jurusan">Alumni TKJ · Angkatan 2018</div>
+          </div>
+        </div>
+        <div class="story-body">
+          <div class="story-badge">💻 Software Engineer</div>
+          <p class="story-quote">"SMK CALM mengajarkan saya fondasi IT yang kuat. Sekarang saya kerja di startup fintech Jakarta dan terus berkembang setiap hari."</p>
+          <div class="story-location">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2C5.8 2 4 3.8 4 6c0 3 4 8 4 8s4-5 4-8c0-2.2-1.8-4-4-4z"/><circle cx="8" cy="6" r="1.5"/></svg>
+            Jakarta Selatan, DKI Jakarta
+          </div>
+        </div>
+      </article>
+      <article class="story-card" role="listitem">
+        <div class="story-header" style="background:linear-gradient(135deg,#7b1fa2,#ab47bc)">
+          <div class="story-avatar" aria-hidden="true">NF</div>
+          <div>
+            <div class="story-name">Nisa Fauziah</div>
+            <div class="story-jurusan">Alumni DKV · Angkatan 2019</div>
+          </div>
+        </div>
+        <div class="story-body">
+          <div class="story-badge" style="background:#f3e5f5;color:#7b1fa2">🎨 Graphic Designer</div>
+          <p class="story-quote">"Ilmu DKV di CALM benar-benar terpakai. Saya kini freelancer desain dengan klien dari Singapura dan Malaysia. Alhamdulillah."</p>
+          <div class="story-location">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2C5.8 2 4 3.8 4 6c0 3 4 8 4 8s4-5 4-8c0-2.2-1.8-4-4-4z"/><circle cx="8" cy="6" r="1.5"/></svg>
+            Bandung, Jawa Barat
+          </div>
+        </div>
+      </article>
+      <article class="story-card" role="listitem">
+        <div class="story-header" style="background:linear-gradient(135deg,#1b5e20,#388e3c)">
+          <div class="story-avatar" aria-hidden="true">AS</div>
+          <div>
+            <div class="story-name">Ahmad Sholehuddin</div>
+            <div class="story-jurusan">Alumni AKL · Angkatan 2016</div>
+          </div>
+        </div>
+        <div class="story-body">
+          <div class="story-badge" style="background:var(--green-light);color:var(--green)">📊 Akuntan BUMN</div>
+          <p class="story-quote">"Dari AKL CALM, lanjut kuliah, sekarang jadi staf keuangan di BUMN Bandung. Guru-guru CALM yang mengajarkan saya disiplin dan teliti."</p>
+          <div class="story-location">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2C5.8 2 4 3.8 4 6c0 3 4 8 4 8s4-5 4-8c0-2.2-1.8-4-4-4z"/><circle cx="8" cy="6" r="1.5"/></svg>
+            Cimahi, Jawa Barat
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- FORM DAFTAR ALUMNI -->
+<section id="form-section" class="section" aria-labelledby="form-heading">
+  <div class="container">
+    <div class="form-wrap">
+      <div class="form-info reveal">
+        <div class="form-info-badge">✅ Gratis & Mudah</div>
+        <h2 id="form-heading">Daftarkan Dirimu sebagai <em style="color:var(--blue-bright);font-style:normal">Alumni CALM</em></h2>
+        <p>Isi formulir singkat ini untuk bergabung dalam database alumni SMK Ciledug Al-Musaddadiyah. Data kamu akan membantu sekolah memantau jejak karier lulusan dan menghubungkan sesama alumni.</p>
+        <div class="form-benefits" role="list" aria-label="Manfaat mendaftar">
+          <div class="benefit-item" role="listitem">
+            <div class="benefit-icon" style="background:var(--blue-pale)" aria-hidden="true">🔗</div>
+            <div class="benefit-text">
+              <strong>Terhubung dengan Sesama Alumni</strong>
+              <span>Jaringan profesional alumni CALM di seluruh Indonesia</span>
+            </div>
+          </div>
+          <div class="benefit-item" role="listitem">
+            <div class="benefit-icon" style="background:#fff8e1" aria-hidden="true">📢</div>
+            <div class="benefit-text">
+              <strong>Info Lowongan & Beasiswa</strong>
+              <span>Dapatkan notifikasi peluang dari jaringan alumni</span>
+            </div>
+          </div>
+          <div class="benefit-item" role="listitem">
+            <div class="benefit-icon" style="background:var(--green-light)" aria-hidden="true">🏆</div>
+            <div class="benefit-text">
+              <strong>Tampil di Infografis Alumni</strong>
+              <span>Kisah sukses kamu bisa menjadi inspirasi adik kelas</span>
+            </div>
+          </div>
+          <div class="benefit-item" role="listitem">
+            <div class="benefit-icon" style="background:#fce4ec" aria-hidden="true">📊</div>
+            <div class="benefit-text">
+              <strong>Bantu Data Akreditasi Sekolah</strong>
+              <span>Data alumni yang lengkap mendukung kualitas SMK CALM</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-frame-wrap reveal">
+        <div class="form-frame-header">
+          <div class="form-frame-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+          <div class="form-frame-title">📋 Formulir Pendaftaran Alumni CALM</div>
+        </div>
+        <div class="form-frame-body">
+          <iframe
+            src="https://docs.google.com/forms/d/e/1FAIpQLSfpMJgT1Lj_4Qq5W4Tk3d-kYVAiOl5Lko7sXz95hXzMBTMwQ/viewform?embedded=true"
+            title="Formulir Pendaftaran Alumni SMK Ciledug Al-Musaddadiyah"
+            loading="lazy"
+            allowfullscreen
+            aria-label="Formulir Google Form pendaftaran alumni">
+            <p>Browser Anda tidak mendukung iframe. <a href="https://forms.gle/5T13Qe8ow37FwDw8A" target="_blank" rel="noopener noreferrer">Klik di sini untuk membuka formulir</a>.</p>
+          </iframe>
+        </div>
+        <div style="padding:12px 20px;background:var(--blue-pale);display:flex;align-items:center;gap:8px">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--blue-bright)" stroke-width="2" aria-hidden="true"><circle cx="8" cy="8" r="6"/><path d="M8 7v4M8 5.5v.5"/></svg>
+          <span style="font-size:11px;color:var(--text-mid)">Formulir tidak tampil? <a href="https://forms.gle/5T13Qe8ow37FwDw8A" target="_blank" rel="noopener noreferrer" style="color:var(--blue-bright);font-weight:700">Buka di tab baru ↗</a></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GITHUB SECTION -->
+<section id="github-section" class="section" aria-labelledby="github-heading">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">Open Source</div>
+      <h2 id="github-heading" class="section-title">Kontribusi di <em>GitHub</em></h2>
+      <p class="section-sub">Data alumni dikelola secara transparan dan terbuka. Ikut berkontribusi dalam pengembangan platform Alumni Tracker CALM.</p>
+    </div>
+    <div class="github-card reveal">
+      <div class="github-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+      </div>
+      <div class="github-info">
+        <h3>smkcalm / alumni-tracker</h3>
+        <p>Repository publik yang berisi kode, data (anonim), dokumentasi, dan panduan kontribusi untuk platform Alumni Tracker SMK Ciledug Al-Musaddadiyah. Terbuka untuk alumni, guru, dan developer komunitas.</p>
+        <div class="github-tags" aria-label="Teknologi yang digunakan">
+          <span class="github-tag">📄 HTML/CSS/JS</span>
+          <span class="github-tag">📊 Google Sheets API</span>
+          <span class="github-tag">📋 Google Forms</span>
+          <span class="github-tag">🔄 GitHub Actions</span>
+          <span class="github-tag">📈 Chart.js</span>
+        </div>
+        <div class="github-btns">
+          <a href="https://github.com/smkcalm/alumni-tracker" target="_blank" rel="noopener noreferrer" class="btn-github">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="white" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+            Lihat di GitHub
+          </a>
+          <a href="https://github.com/smkcalm/alumni-tracker/fork" target="_blank" rel="noopener noreferrer" class="btn-blue">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="3" r="1.5"/><circle cx="11" cy="3" r="1.5"/><circle cx="5" cy="13" r="1.5"/><path d="M5 4.5v3a2.5 2.5 0 002.5 2.5h.5M11 4.5v1a3 3 0 01-3 3"/></svg>
+            Fork & Kontribusi
+          </a>
+          <a href="https://forms.gle/5T13Qe8ow37FwDw8A" target="_blank" rel="noopener noreferrer" class="btn-ghost" style="background:var(--blue-pale);color:var(--blue-mid);border:1.5px solid rgba(30,136,229,.2)">
+            📋 Akses Google Form
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOW TO CONTRIBUTE -->
+    <div style="margin-top:32px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px" class="reveal" role="list" aria-label="Cara berkontribusi">
+      <div class="info-card" role="listitem">
+        <div class="icon-wrap" style="background:#e8f5e9;font-size:24px" aria-hidden="true">1️⃣</div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:800;color:var(--text-dark);margin-bottom:6px">Fork Repository</div>
+        <div class="card-lbl">Clone repository alumni-tracker dari GitHub ke komputer Anda</div>
+      </div>
+      <div class="info-card" role="listitem">
+        <div class="icon-wrap" style="background:#fff8e1;font-size:24px" aria-hidden="true">2️⃣</div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:800;color:var(--text-dark);margin-bottom:6px">Update Data</div>
+        <div class="card-lbl">Tambah atau perbarui data alumni di file JSON dan koneksikan dengan Google Sheets</div>
+      </div>
+      <div class="info-card" role="listitem">
+        <div class="icon-wrap" style="background:var(--blue-pale);font-size:24px" aria-hidden="true">3️⃣</div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:800;color:var(--text-dark);margin-bottom:6px">Pull Request</div>
+        <div class="card-lbl">Buat pull request dan tim CALM akan mereview & merge kontribusi Anda</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta-section" aria-labelledby="cta-heading">
+  <div class="cta-inner">
+    <div class="hero-badge" style="display:inline-flex;margin-bottom:20px">🎓 Bergabunglah Sekarang</div>
+    <h2 id="cta-heading">Kamu Alumni CALM? Daftarkan Dirimu!</h2>
+    <p>Jadilah bagian dari komunitas alumni terbesar SMK Ciledug Al-Musaddadiyah. Satu formulir, seribu koneksi.</p>
+    <div class="cta-btns">
+      <a href="#form-section" class="btn-gold" style="font-size:15px;padding:14px 32px">
+        📋 Isi Formulir Sekarang
+      </a>
+      <a href="https://www.smkciledugalmusaddadiyah.sch.id" class="btn-ghost">
+        🏫 Kembali ke Web Sekolah
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="alumni-footer" role="contentinfo">
+  <p>© 2025 <strong style="color:rgba(255,255,255,.55)">SMK Ciledug Al-Musaddadiyah</strong> — Alumni Tracker v1.0</p>
+  <p>
+    <a href="https://www.smkciledugalmusaddadiyah.sch.id">Website Utama</a> ·
+    <a href="https://forms.gle/5T13Qe8ow37FwDw8A" target="_blank" rel="noopener noreferrer">Google Form</a> ·
+    <a href="https://github.com/smkcalm/alumni-tracker" target="_blank" rel="noopener noreferrer">GitHub</a> ·
+    <a href="https://www.instagram.com/smkscalm_official/" target="_blank" rel="noopener noreferrer">Instagram</a>
+  </p>
+</footer>
+
+<script>
+/* ── COUNTER ANIMATION ── */
+function animateCounter(el){
+  const target=parseInt(el.dataset.target,10);
+  const suffix=el.dataset.suffix||'';
+  const dur=1800;
+  const start=performance.now();
+  function step(now){
+    const p=Math.min((now-start)/dur,1);
+    const ease=1-Math.pow(1-p,4);
+    el.textContent=Math.round(target*ease)+suffix;
+    if(p<1)requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+/* ── INTERSECTION OBSERVER ── */
+const io=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      e.target.querySelectorAll('.counter-num,.big-num[data-target]').forEach(animateCounter);
+      io.unobserve(e.target);
+    }
+  });
+},{threshold:0.12});
+
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+/* Auto-trigger hero counters */
+setTimeout(()=>{
+  document.querySelectorAll('#alumni-hero .counter-num').forEach(animateCounter);
+},400);
+
+/* ── NAV SCROLL ── */
+const nav=document.getElementById('alumni-nav');
+window.addEventListener('scroll',()=>{
+  nav.style.boxShadow=window.scrollY>60?'0 4px 28px rgba(11,61,145,.45)':'';
+},{passive:true});
+
+/* ── BAR CHART ANIMATION on scroll ── */
+const barIO=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.querySelectorAll('.bar-fill').forEach(b=>{
+        const w=b.style.width;
+        b.style.width='0%';
+        setTimeout(()=>{b.style.width=w;},50);
+      });
+      barIO.unobserve(e.target);
+    }
+  });
+},{threshold:0.2});
+document.querySelectorAll('.charts-row').forEach(el=>barIO.observe(el));
+
+/* ── FORM IFRAME FALLBACK (load the real shortlink) ── */
+const iframe=document.querySelector('.form-frame-body iframe');
+if(iframe){
+  iframe.addEventListener('error',()=>{
+    iframe.style.minHeight='80px';
+  });
+  /* Replace with real embedded form URL from short link redirect */
+  iframe.src='https://docs.google.com/forms/d/e/1FAIpQLSfxxx/viewform?embedded=true';
+  /* 
+    HOW TO GET REAL EMBED URL:
+    1. Buka forms.gle/5T13Qe8ow37FwDw8A
+    2. Klik ikon kirim (Send)
+    3. Pilih tab "</>" (Embed)
+    4. Salin URL di atribut src iframe
+    5. Ganti URL di bawah ini
+  */
+}
+</script>
+</body>
+</html>
