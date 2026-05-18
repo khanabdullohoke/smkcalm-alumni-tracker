@@ -502,7 +502,7 @@ img,svg{display:block}
 <!-- NAV -->
 <nav id="alumni-nav">
   <div class="nav-inner">
-    <a class="nav-brand" onclick="showPage('dashboard')" href="#" role="button" aria-label="Alumni Tracker Beranda">
+    <a class="nav-brand" onclick="showPage('dashboard');return false" href="#" role="button" aria-label="Alumni Tracker Beranda">
       <div class="nav-brand-icon">🎓</div>
       <div class="nav-brand-text">
         <span>Alumni Tracker</span>
@@ -529,7 +529,7 @@ img,svg{display:block}
     <button class="mobile-nav-btn primary" id="mnav-form" onclick="showPage('form')">
       <div class="mn-icon-wrap"><span>+</span><span>Daftar</span></div>
     </button>
-    <button class="mobile-nav-btn" id="mnav-info" onclick="document.getElementById('infografis')?.scrollIntoView({behavior:'smooth'})">
+    <button class="mobile-nav-btn" id="mnav-info" onclick="showPage('dashboard');setTimeout(()=>document.getElementById('infografis')?.scrollIntoView({behavior:'smooth'}),120)">
       <div class="mn-icon">📈</div>
       <div class="mn-label">Infografis</div>
     </button>
@@ -1109,8 +1109,20 @@ function showSuccess(p){
 function closeSuccess(){
   document.getElementById('success-overlay').classList.remove('show');
   document.body.style.overflow='';
-  document.getElementById('btn-submit').disabled=false;
-  document.getElementById('btn-submit').classList.remove('loading');
+  // Reset btn
+  const btn=document.getElementById('btn-submit');
+  btn.disabled=false;btn.classList.remove('loading');
+  // Reset all form fields
+  const fields=['f-nama','f-email','f-kontak','f-domisili','f-medsos','f-jurusan','f-tahun','f-status','f-kerja-tempat','f-kerja-jabatan','f-usaha-nama','f-usaha-bidang','f-kuliah-kampus','f-kuliah-prodi','f-pengalaman','f-pesan'];
+  fields.forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  // Reset char counters
+  ['cnt-pengalaman','cnt-pesan'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='0/500';});
+  // Hide conditional blocks & error messages
+  ['cond-kerja','cond-usaha','cond-kuliah'].forEach(id=>document.getElementById(id)?.classList.remove('show'));
+  document.querySelectorAll('.field-error.show').forEach(el=>el.classList.remove('show'));
+  document.querySelectorAll('.field-input.error,.field-select.error,.field-textarea.error').forEach(el=>el.classList.remove('error'));
+  document.getElementById('jurusan-note').style.display='none';
+  updateStep(1);
   showPage('dashboard');
   loadAlumniData(true);
 }
@@ -1124,14 +1136,21 @@ function shareWhatsApp(){
 }
 
 /* ── DATA LOADER ── */
+let _loadingController=null;
 async function loadAlumniData(forceRefresh=false){
+  // Cancel any in-flight request
+  if(_loadingController){_loadingController.abort();}
+  _loadingController=new AbortController();
+  const signal=_loadingController.signal;
+  // Timeout after 10s
+  const timeoutId=setTimeout(()=>_loadingController?.abort(),10000);
   const badge=document.getElementById('data-status-badge');
   const ts=document.getElementById('data-timestamp');
   const refreshBtn=document.getElementById('refresh-btn');
   if(refreshBtn)refreshBtn.classList.add('spinning');
   const url=forceRefresh?APPS_SCRIPT_URL+'?t='+Date.now():APPS_SCRIPT_URL;
   try{
-    const res=await fetch(url);
+    const res=await fetch(url,{signal});
     const d=await res.json();
     if(d.error){showDataError('Gagal memuat: '+d.error);return;}
     if(d.jurusan){
@@ -1163,6 +1182,8 @@ async function loadAlumniData(forceRefresh=false){
     showDataError('Koneksi gagal — menampilkan data estimasi');
     loadFallbackData();
   } finally{
+    clearTimeout(timeoutId);
+    _loadingController=null;
     if(refreshBtn)refreshBtn.classList.remove('spinning');
   }
 }
@@ -1204,7 +1225,8 @@ function updateBarChart(jurusanData){
   container.innerHTML=sorted.slice(0,8).map(([nama,jumlah],i)=>{
     const pct=Math.round((jumlah/max)*100);
     const shortName=nama.length>14?nama.substring(0,14)+'…':nama;
-    return`<div class="bar-row"><div class="bar-label" title="${nama}">${shortName}</div><div class="bar-track"><div class="bar-fill" style="width:0%;background:${colors[i%colors.length]}" data-pct="${pct}">${jumlah}</div></div><div class="bar-pct">${jumlah}</div></div>`;
+    const safeName=escHtml(nama);const safeShort=escHtml(shortName);const safeCount=parseInt(jumlah)||0;
+    return`<div class="bar-row"><div class="bar-label" title="${safeName}">${safeShort}</div><div class="bar-track"><div class="bar-fill" style="width:0%;background:${colors[i%colors.length]}" data-pct="${pct}">${safeCount}</div></div><div class="bar-pct">${safeCount}</div></div>`;
   }).join('');
   requestAnimationFrame(()=>{
     container.querySelectorAll('.bar-fill').forEach(bar=>{bar.style.width=bar.dataset.pct+'%';});
@@ -1243,7 +1265,7 @@ function updateWilayah(wilayahData,total){
   if(badge)badge.textContent=`🗺️ ${sorted.length}+ Kota/Provinsi`;
   const flagMap={'jawa barat':'🌋','garut':'🌋','bandung':'🌆','jakarta':'🏙️','dki jakarta':'🏙️','banten':'🏝️','tangerang':'🏝️','serang':'🏝️','jawa tengah':'🌊','semarang':'🌊','jawa timur':'⛰️','surabaya':'⛰️','kalimantan':'🌴','borneo':'🌴','sumatera':'🏔️','medan':'🏔️','palembang':'🏔️','sulawesi':'🐚','makassar':'🐚','bali':'🌺','lombok':'🌺','papua':'🦜','maluku':'🦜','luar negeri':'🌐','korea':'🌐','jepang':'🌐','malaysia':'🌐'};
   function getFlag(name){const lower=name.toLowerCase();for(const[k,f]of Object.entries(flagMap)){if(lower.includes(k))return f;}return'📍';}
-  grid.innerHTML=sorted.slice(0,9).map(([nama,jumlah])=>`<div class="province-chip"><div class="prov-flag">${getFlag(nama)}</div><div class="prov-count">${jumlah}</div><div class="prov-name">${nama}</div></div>`).join('');
+  grid.innerHTML=sorted.slice(0,9).map(([nama,jumlah])=>`<div class="province-chip"><div class="prov-flag">${getFlag(nama)}</div><div class="prov-count">${parseInt(jumlah)||0}</div><div class="prov-name">${escHtml(nama)}</div></div>`).join('');
 }
 
 function updateWilayahFallback(){
@@ -1265,7 +1287,7 @@ function updateStories(stories){
     const emoji=getStatusEmoji(s.status);
     const badgeBg=i%2===0?'var(--blue-pale)':'#f3e5f5';
     const badgeColor=i%2===0?'var(--blue-mid)':'#7b1fa2';
-    return`<article class="story-card"><div class="story-header" style="background:${grad}"><div class="story-avatar" style="background:rgba(255,255,255,.15)">${initial}</div><div><div class="story-name">${escHtml(s.nama)}</div><div class="story-jurusan">${escHtml(s.jurusan||'Alumni CALM')}${s.tahunLulus?' · Angkatan '+s.tahunLulus:''}</div></div></div><div class="story-body"><div class="story-badge" style="background:${badgeBg};color:${badgeColor}">${emoji} ${escHtml(s.status||'Alumni')}</div>${s.detail?`<div style="font-size:11.5px;font-weight:600;color:var(--blue-mid);margin-bottom:7px">🏢 ${escHtml(s.detail)}</div>`:''}<p class="story-quote">"${escHtml(s.pesan)}"</p><div class="story-location">📍 ${escHtml(s.domisili||'Indonesia')}</div></div></article>`;
+    return`<article class="story-card"><div class="story-header" style="background:${grad}"><div class="story-avatar" style="background:rgba(255,255,255,.15)">${initial}</div><div><div class="story-name">${escHtml(s.nama)}</div><div class="story-jurusan">${escHtml(s.jurusan||'Alumni CALM')}${s.tahunLulus?' · Angkatan '+escHtml(String(s.tahunLulus)):''}</div></div></div><div class="story-body"><div class="story-badge" style="background:${badgeBg};color:${badgeColor}">${emoji} ${escHtml(s.status||'Alumni')}</div>${s.detail?`<div style="font-size:11.5px;font-weight:600;color:var(--blue-mid);margin-bottom:7px">🏢 ${escHtml(s.detail)}</div>`:''}<p class="story-quote">"${escHtml(s.pesan)}"</p><div class="story-location">📍 ${escHtml(s.domisili||'Indonesia')}</div></div></article>`;
   }).join('');
 }
 
