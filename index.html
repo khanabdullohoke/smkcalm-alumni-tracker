@@ -267,15 +267,15 @@ img{max-width:100%}
     </div>
     <div class="hero-stats" aria-label="Statistik alumni">
       <div class="hero-stat">
-        <div class="num counter-num" data-target="2847" data-suffix="">0</div>
+        <div class="num counter-num" data-target="2847" data-suffix="" data-id="total">0</div>
         <div class="lbl">Total Alumni Terdaftar</div>
       </div>
       <div class="hero-stat">
-        <div class="num counter-num" data-target="87" data-suffix="%">0</div>
+        <div class="num counter-num" data-target="87" data-suffix="%" data-id="terserap">0</div>
         <div class="lbl">Terserap Kerja / Kuliah</div>
       </div>
       <div class="hero-stat">
-        <div class="num counter-num" data-target="28" data-suffix="">0</div>
+        <div class="num counter-num" data-target="28" data-suffix="" data-id="angkatan">0</div>
         <div class="lbl">Angkatan (Tahun)</div>
       </div>
     </div>
@@ -288,29 +288,29 @@ img{max-width:100%}
     <div class="section-header">
       <div class="section-label">Data Alumni</div>
       <h2 class="section-title">Infografis <em>Alumni SMK CALM</em></h2>
-      <p class="section-sub">Visualisasi data alumni real-time berdasarkan laporan formulir Google Form. Diperbarui secara berkala.</p>
+      <p class="section-sub">Visualisasi data alumni real-time berdasarkan laporan formulir Google Form. <span id="data-timestamp">Diperbarui secara berkala.</span></p>
     </div>
 
     <!-- 4 kartu statistik -->
     <div class="infographic-grid reveal" role="list">
       <article class="info-card" role="listitem" style="--delay:.05s">
         <div class="icon-wrap" style="background:#e3f2fd" aria-hidden="true">💼</div>
-        <div class="big-num" style="color:var(--blue-deep)" data-target="1423" data-suffix="">0</div>
+        <div class="big-num" style="color:var(--blue-deep)" data-target="1423" data-suffix="" data-id="bekerja">0</div>
         <div class="card-lbl">Alumni Bekerja<br><span style="color:var(--blue-bright);font-weight:600">di BUMN, Swasta & Wirausaha</span></div>
       </article>
       <article class="info-card" role="listitem" style="--delay:.1s">
         <div class="icon-wrap" style="background:#e8f5e9" aria-hidden="true">🎓</div>
-        <div class="big-num" style="color:var(--green)" data-target="612" data-suffix="">0</div>
+        <div class="big-num" style="color:var(--green)" data-target="612" data-suffix="" data-id="kuliah">0</div>
         <div class="card-lbl">Melanjutkan Kuliah<br><span style="color:var(--green);font-weight:600">PTN & PTS Seluruh Indonesia</span></div>
       </article>
       <article class="info-card" role="listitem" style="--delay:.15s">
         <div class="icon-wrap" style="background:#fff8e1" aria-hidden="true">🌏</div>
-        <div class="big-num" style="color:#e65100" data-target="89" data-suffix="">0</div>
+        <div class="big-num" style="color:#e65100" data-target="89" data-suffix="" data-id="luar-negeri">0</div>
         <div class="card-lbl">Alumni di Luar Negeri<br><span style="color:#e65100;font-weight:600">Korea, Jepang, Arab Saudi & lainnya</span></div>
       </article>
       <article class="info-card" role="listitem" style="--delay:.2s">
         <div class="icon-wrap" style="background:#fce4ec" aria-hidden="true">🚀</div>
-        <div class="big-num" style="color:#880e4f" data-target="134" data-suffix="">0</div>
+        <div class="big-num" style="color:#880e4f" data-target="134" data-suffix="" data-id="berwirausaha">0</div>
         <div class="card-lbl">Wirausaha Mandiri<br><span style="color:#880e4f;font-weight:600">UMKM, Startup & Freelancer</span></div>
       </article>
     </div>
@@ -320,7 +320,7 @@ img{max-width:100%}
       <!-- Bar: Jurusan -->
       <div class="chart-box">
         <h3>Sebaran Alumni per Jurusan</h3>
-        <div class="bar-chart" role="list" aria-label="Grafik batang jurusan">
+        <div id="bar-chart-jurusan" class="bar-chart" role="list" aria-label="Grafik batang jurusan">
           <div class="bar-row" role="listitem">
             <div class="bar-label">TKJ</div>
             <div class="bar-track"><div class="bar-fill" style="width:78%;background:linear-gradient(90deg,var(--blue-mid),var(--blue-bright))">TKJ</div></div>
@@ -382,15 +382,15 @@ img{max-width:100%}
             <!-- Lainnya 14.4% -->
             <circle cx="80" cy="80" r="60" fill="none" stroke="#b0bec5" stroke-width="28"
               stroke-dasharray="54.2 322.8" stroke-dashoffset="-322.5" transform="rotate(-90 80 80)"/>
-            <text x="80" y="75" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="22" font-weight="900" fill="var(--blue-deep)">87%</text>
+            <text id="donut-center" x="80" y="75" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="22" font-weight="900" fill="var(--blue-deep)">87%</text>
             <text x="80" y="94" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#607d9e">Terserap</text>
           </svg>
           <div class="donut-legend" role="list" aria-label="Keterangan donat">
-            <div class="legend-item" role="listitem"><div class="legend-dot" style="background:var(--blue-bright)"></div>Bekerja<span class="legend-pct">50%</span></div>
-            <div class="legend-item" role="listitem"><div class="legend-dot" style="background:var(--green)"></div>Kuliah<span class="legend-pct">21.5%</span></div>
+            <div class="legend-item" role="listitem"><div class="legend-dot" style="background:var(--blue-bright)"></div>Bekerja<span id="legend-bekerja" class="legend-pct">50%</span></div>
+            <div class="legend-item" role="listitem"><div class="legend-dot" style="background:var(--green)"></div>Kuliah<span id="legend-kuliah" class="legend-pct">21.5%</span></div>
             <div class="legend-item" role="listitem"><div class="legend-dot" style="background:#e65100"></div>Luar Negeri<span class="legend-pct">4.7%</span></div>
-            <div class="legend-item" role="listitem"><div class="legend-dot" style="background:#880e4f"></div>Wirausaha<span class="legend-pct">9.4%</span></div>
-            <div class="legend-item" role="listitem"><div class="legend-dot" style="background:#b0bec5"></div>Lainnya<span class="legend-pct">14.4%</span></div>
+            <div class="legend-item" role="listitem"><div class="legend-dot" style="background:#880e4f"></div>Wirausaha<span id="legend-wirausaha" class="legend-pct">9.4%</span></div>
+            <div class="legend-item" role="listitem"><div class="legend-dot" style="background:#b0bec5"></div>Lainnya<span id="legend-lainnya" class="legend-pct">14.4%</span></div>
           </div>
         </div>
       </div>
@@ -517,7 +517,7 @@ img{max-width:100%}
       <h2 id="stories-heading" class="section-title">Suara <em>Alumni CALM</em></h2>
       <p class="section-sub">Kisah nyata lulusan yang kini berkarya dan menginspirasi.</p>
     </div>
-    <div class="stories-grid reveal" role="list">
+    <div id="stories-grid" class="stories-grid reveal" role="list">
       <article class="story-card" role="listitem">
         <div class="story-header">
           <div class="story-avatar" aria-hidden="true">RH</div>
@@ -619,17 +619,21 @@ img{max-width:100%}
         </div>
         <div class="form-frame-body">
           <iframe
-            src="https://docs.google.com/forms/d/e/1FAIpQLSfpMJgT1Lj_4Qq5W4Tk3d-kYVAiOl5Lko7sXz95hXzMBTMwQ/viewform?embedded=true"
+            src="https://docs.google.com/forms/d/e/1FAIpQLSfIKN4w7LRKoqe3WADfY3GTr05jIK9sw2u2Bbx401GmhSHt4Q/viewform?embedded=true"
+            width="640"
+            height="3911"
+            frameborder="0"
+            marginheight="0"
+            marginwidth="0"
             title="Formulir Pendaftaran Alumni SMK Ciledug Al-Musaddadiyah"
             loading="lazy"
-            allowfullscreen
             aria-label="Formulir Google Form pendaftaran alumni">
-            <p>Browser Anda tidak mendukung iframe. <a href="https://forms.gle/5T13Qe8ow37FwDw8A" target="_blank" rel="noopener noreferrer">Klik di sini untuk membuka formulir</a>.</p>
+            <p>Browser Anda tidak mendukung iframe. <a href="https://docs.google.com/forms/d/e/1FAIpQLSfIKN4w7LRKoqe3WADfY3GTr05jIK9sw2u2Bbx401GmhSHt4Q/viewform" target="_blank" rel="noopener noreferrer">Klik di sini untuk membuka formulir</a>.</p>
           </iframe>
         </div>
         <div style="padding:12px 20px;background:var(--blue-pale);display:flex;align-items:center;gap:8px">
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--blue-bright)" stroke-width="2" aria-hidden="true"><circle cx="8" cy="8" r="6"/><path d="M8 7v4M8 5.5v.5"/></svg>
-          <span style="font-size:11px;color:var(--text-mid)">Formulir tidak tampil? <a href="https://forms.gle/5T13Qe8ow37FwDw8A" target="_blank" rel="noopener noreferrer" style="color:var(--blue-bright);font-weight:700">Buka di tab baru ↗</a></span>
+          <span style="font-size:11px;color:var(--text-mid)">Formulir tidak tampil? <a href="https://docs.google.com/forms/d/e/1FAIpQLSfIKN4w7LRKoqe3WADfY3GTr05jIK9sw2u2Bbx401GmhSHt4Q/viewform" target="_blank" rel="noopener noreferrer" style="color:var(--blue-bright);font-weight:700">Buka di tab baru ↗</a></span>
         </div>
       </div>
     </div>
@@ -649,7 +653,7 @@ img{max-width:100%}
         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
       </div>
       <div class="github-info">
-        <h3>smkcalm / alumni-tracker</h3>
+        <h3>khanabdullohoke / smkcalm-alumni-tracker</h3>
         <p>Repository publik yang berisi kode, data (anonim), dokumentasi, dan panduan kontribusi untuk platform Alumni Tracker SMK Ciledug Al-Musaddadiyah. Terbuka untuk alumni, guru, dan developer komunitas.</p>
         <div class="github-tags" aria-label="Teknologi yang digunakan">
           <span class="github-tag">📄 HTML/CSS/JS</span>
@@ -659,11 +663,11 @@ img{max-width:100%}
           <span class="github-tag">📈 Chart.js</span>
         </div>
         <div class="github-btns">
-          <a href="https://github.com/smkcalm/alumni-tracker" target="_blank" rel="noopener noreferrer" class="btn-github">
+          <a href="https://github.com/khanabdullohoke/smkcalm-alumni-tracker" target="_blank" rel="noopener noreferrer" class="btn-github">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="white" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
             Lihat di GitHub
           </a>
-          <a href="https://github.com/smkcalm/alumni-tracker/fork" target="_blank" rel="noopener noreferrer" class="btn-blue">
+          <a href="https://github.com/khanabdullohoke/smkcalm-alumni-tracker/fork" target="_blank" rel="noopener noreferrer" class="btn-blue">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="3" r="1.5"/><circle cx="11" cy="3" r="1.5"/><circle cx="5" cy="13" r="1.5"/><path d="M5 4.5v3a2.5 2.5 0 002.5 2.5h.5M11 4.5v1a3 3 0 01-3 3"/></svg>
             Fork & Kontribusi
           </a>
@@ -718,7 +722,7 @@ img{max-width:100%}
   <p>
     <a href="https://www.smkciledugalmusaddadiyah.sch.id">Website Utama</a> ·
     <a href="https://forms.gle/5T13Qe8ow37FwDw8A" target="_blank" rel="noopener noreferrer">Google Form</a> ·
-    <a href="https://github.com/smkcalm/alumni-tracker" target="_blank" rel="noopener noreferrer">GitHub</a> ·
+    <a href="https://github.com/khanabdullohoke/smkcalm-alumni-tracker" target="_blank" rel="noopener noreferrer">GitHub</a> ·
     <a href="https://www.instagram.com/smkscalm_official/" target="_blank" rel="noopener noreferrer">Instagram</a>
   </p>
 </footer>
@@ -785,7 +789,7 @@ if(iframe){
     iframe.style.minHeight='80px';
   });
   /* Replace with real embedded form URL from short link redirect */
-  iframe.src='https://docs.google.com/forms/d/e/1FAIpQLSfxxx/viewform?embedded=true';
+  iframe.src='https://docs.google.com/forms/d/e/1FAIpQLSfIKN4w7LRKoqe3WADfY3GTr05jIK9sw2u2Bbx401GmhSHt4Q/viewform?embedded=true';
   /* 
     HOW TO GET REAL EMBED URL:
     1. Buka forms.gle/5T13Qe8ow37FwDw8A
@@ -796,5 +800,146 @@ if(iframe){
   */
 }
 </script>
+
+<script>
+/* ══════════════════════════════════════════════════════
+   ALUMNI TRACKER — Google Apps Script Integration
+   Ganti APPS_SCRIPT_URL dengan URL deployment Anda
+   ══════════════════════════════════════════════════════ */
+
+const APPS_SCRIPT_URL = 'GANTI_DENGAN_URL_APPS_SCRIPT_ANDA';
+
+async function loadAlumniData() {
+  if (APPS_SCRIPT_URL === 'GANTI_DENGAN_URL_APPS_SCRIPT_ANDA') return; // belum diset
+
+  try {
+    const res = await fetch(APPS_SCRIPT_URL);
+    const d = await res.json();
+    if (d.error) { console.warn('Apps Script error:', d.error); return; }
+
+    // ── Update Hero Stats ──
+    updateCounter('[data-id="total"]',    d.total     || 0);
+    updateCounter('[data-id="terserap"]', d.terserap  || 0, '%');
+    updateCounter('[data-id="angkatan"]', d.angkatan  || 0);
+
+    // ── Update Info Cards ──
+    updateCounter('[data-id="bekerja"]',     d.bekerja     || 0);
+    updateCounter('[data-id="kuliah"]',      d.kuliah      || 0);
+    updateCounter('[data-id="berwirausaha"]',d.berwirausaha|| 0);
+    updateCounter('[data-id="lainnya"]',     d.lainnya     || 0);
+
+    // ── Update Bar Chart Jurusan ──
+    if (d.jurusan && Object.keys(d.jurusan).length > 0) {
+      updateBarChart(d.jurusan);
+    }
+
+    // ── Update Alumni Stories ──
+    if (d.stories && d.stories.length > 0) {
+      updateStories(d.stories);
+    }
+
+    // ── Update Donut Chart ──
+    if (d.total > 0) {
+      updateDonut(d);
+    }
+
+    // ── Timestamp update ──
+    const ts = document.getElementById('data-timestamp');
+    if (ts && d.lastUpdated) ts.textContent = 'Data per ' + d.lastUpdated;
+
+  } catch(e) {
+    console.warn('Gagal memuat data alumni:', e);
+  }
+}
+
+function updateCounter(selector, value, suffix) {
+  const el = document.querySelector(selector);
+  if (!el) return;
+  el.dataset.target = value;
+  if (suffix) el.dataset.suffix = suffix;
+  animateCounter(el);
+}
+
+function updateBarChart(jurusanData) {
+  const container = document.getElementById('bar-chart-jurusan');
+  if (!container) return;
+
+  const sorted = Object.entries(jurusanData).sort((a,b) => b[1]-a[1]);
+  const max = sorted[0]?.[1] || 1;
+  const colors = [
+    'linear-gradient(90deg,#1565c0,#1e88e5)',
+    'linear-gradient(90deg,#7b1fa2,#9c27b0)',
+    'linear-gradient(90deg,#1e8c4e,#4caf50)',
+    'linear-gradient(90deg,#e65100,#ff6d00)',
+    'linear-gradient(90deg,#ffb300,#ffd54f)',
+    'linear-gradient(90deg,#0097a7,#00bcd4)',
+    'linear-gradient(90deg,#33691e,#558b2f)',
+  ];
+
+  container.innerHTML = sorted.slice(0,7).map(([nama, jumlah], i) => {
+    const pct = Math.round((jumlah/max)*100);
+    return `<div class="bar-row" role="listitem">
+      <div class="bar-label">${nama}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${colors[i%colors.length]}">${nama.substring(0,6)}</div></div>
+      <div class="bar-pct">${jumlah}</div>
+    </div>`;
+  }).join('');
+}
+
+function updateDonut(d) {
+  const total = d.bekerja + d.berwirausaha + d.kuliah + d.lainnya || 1;
+  const pctBekerja     = ((d.bekerja/total)*100).toFixed(1);
+  const pctWirausaha   = ((d.berwirausaha/total)*100).toFixed(1);
+  const pctKuliah      = ((d.kuliah/total)*100).toFixed(1);
+  const pctLainnya     = ((d.lainnya/total)*100).toFixed(1);
+  const terserap       = Math.round(((d.bekerja+d.berwirausaha+d.kuliah)/total)*100);
+
+  // Update legend teks
+  const legends = {
+    'legend-bekerja': pctBekerja + '%',
+    'legend-wirausaha': pctWirausaha + '%',
+    'legend-kuliah': pctKuliah + '%',
+    'legend-lainnya': pctLainnya + '%',
+  };
+  Object.entries(legends).forEach(([id, val]) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val;
+  });
+
+  // Update teks tengah donut
+  const donutCenter = document.getElementById('donut-center');
+  if (donutCenter) donutCenter.textContent = terserap + '%';
+}
+
+function updateStories(stories) {
+  const grid = document.getElementById('stories-grid');
+  if (!grid) return;
+
+  grid.innerHTML = stories.map(s => {
+    const initial = s.nama ? s.nama.charAt(0).toUpperCase() : '?';
+    const angkatan = s.tahunLulus ? "Angkatan " + s.tahunLulus : '';
+    return `
+    <article class="story-card">
+      <div class="story-header">
+        <div class="story-avatar">${initial}</div>
+        <div>
+          <div class="story-name">${s.nama}</div>
+          <div class="story-jurusan">${s.jurusan} · ${angkatan}</div>
+        </div>
+      </div>
+      <div class="story-body">
+        <div class="story-badge">${s.status || '🎓 Alumni'}</div>
+        ${s.detail ? `<div style="font-size:12px;font-weight:600;color:var(--blue-mid);margin-bottom:8px">📍 ${s.detail}</div>` : ''}
+        <p class="story-quote">"${s.pesan}"</p>
+        <div class="story-location">📍 ${s.domisili || 'Indonesia'}</div>
+      </div>
+    </article>`;
+  }).join('');
+}
+
+// Jalankan saat halaman selesai load
+document.addEventListener('DOMContentLoaded', loadAlumniData);
+</script>
+
 </body>
 </html>
