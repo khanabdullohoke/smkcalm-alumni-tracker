@@ -220,18 +220,59 @@ img,svg{display:block}
 .legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 .legend-pct{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;color:var(--text-dark);margin-left:auto}
 
-/* Map */
+/* ── WILAYAH CARD (BARU) ── */
 .map-card{background:var(--cream);border-radius:var(--radius);padding:24px;border:1px solid rgba(30,136,229,.1)}
-.province-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
-.province-chip{
-  background:#fff;border:1px solid rgba(30,136,229,.1);
-  border-radius:var(--radius-sm);padding:12px 10px;text-align:center;
-  transition:all var(--transition);
+.map-card-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:20px}
+.wilayah-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:0}
+.wilayah-tables-wrap{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.wilayah-table-section{}
+.wilayah-table-title{
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:800;
+  color:var(--text-dark);margin-bottom:12px;display:flex;align-items:center;gap:8px;
+  padding-bottom:8px;border-bottom:2px solid var(--blue-pale);
 }
-.province-chip:hover{border-color:var(--blue-light);box-shadow:var(--shadow)}
-.province-chip .prov-flag{font-size:17px;margin-bottom:4px}
-.province-chip .prov-name{font-size:9.5px;color:var(--text-muted);font-weight:500;line-height:1.3}
-.province-chip .prov-count{font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:900;color:var(--blue-deep)}
+.wilayah-table-title .wtitle-icon{font-size:16px}
+.wilayah-table-title .wtitle-badge{
+  font-size:9.5px;font-weight:700;padding:2px 8px;border-radius:50px;
+  background:var(--blue-pale);color:var(--blue-mid);margin-left:auto;
+}
+.wilayah-table{width:100%;border-collapse:collapse;font-size:12px}
+.wilayah-table thead tr{background:var(--blue-deep)}
+.wilayah-table thead th{
+  padding:7px 10px;text-align:left;font-size:10px;font-weight:700;
+  color:rgba(255,255,255,.85);letter-spacing:.06em;text-transform:uppercase;
+}
+.wilayah-table thead th:last-child{text-align:right}
+.wilayah-table thead th:first-child{border-radius:8px 0 0 8px}
+.wilayah-table thead th:last-child{border-radius:0 8px 8px 0}
+.wilayah-table tbody tr{border-bottom:1px solid rgba(30,136,229,.07);transition:background var(--transition)}
+.wilayah-table tbody tr:hover{background:rgba(30,136,229,.04)}
+.wilayah-table tbody tr:last-child{border-bottom:none}
+.wilayah-table tbody td{padding:8px 10px;color:var(--text-mid);vertical-align:middle}
+.wilayah-table tbody td:last-child{text-align:right}
+.wt-rank{
+  width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;
+  font-size:9.5px;font-weight:800;color:#fff;flex-shrink:0;
+}
+.wt-rank.r1{background:var(--gold)}
+.wt-rank.r2{background:#90a4ae}
+.wt-rank.r3{background:#a1887f}
+.wt-rank.rn{background:var(--blue-pale);color:var(--blue-mid)}
+.wt-name{font-weight:600;color:var(--text-dark);display:flex;align-items:center;gap:7px}
+.wt-flag{font-size:15px}
+.wt-count{
+  font-family:'Plus Jakarta Sans',sans-serif;font-weight:900;font-size:14px;color:var(--blue-deep);
+}
+.wt-bar-mini{
+  display:inline-block;height:6px;border-radius:3px;
+  background:linear-gradient(90deg,var(--blue-bright),var(--blue-light));
+  vertical-align:middle;margin-left:8px;transition:width .8s ease;min-width:4px;
+}
+.wt-count-wrap{display:flex;align-items:center;justify-content:flex-end;gap:6px}
+.wilayah-empty{
+  text-align:center;padding:28px 12px;color:var(--text-muted);font-size:12.5px;
+  background:#fff;border-radius:var(--radius-sm);border:1.5px dashed rgba(30,136,229,.15);
+}
 
 /* Skeleton */
 .skeleton{
@@ -465,7 +506,7 @@ img,svg{display:block}
 @media(max-width:768px){
   .charts-row{grid-template-columns:1fr}
   .stories-grid{grid-template-columns:1fr}
-  .province-grid{grid-template-columns:repeat(2,1fr)}
+  .wilayah-tables-wrap{grid-template-columns:1fr}
   .fields-row-2{grid-template-columns:1fr}
   .form-body{padding:18px 15px}
 }
@@ -485,8 +526,7 @@ img,svg{display:block}
   #main-layout{padding:24px 16px 96px}
   .form-body{padding:16px 13px}
   .success-box{padding:28px 18px;margin:36px 14px}
-  .province-grid{grid-template-columns:repeat(2,1fr)}
-  .bar-label{width:68px;font-size:10px}
+  .wilayah-tables-wrap{grid-template-columns:1fr}
 }
 @media(max-width:400px){
   .infographic-grid{grid-template-columns:1fr}
@@ -639,16 +679,36 @@ img,svg{display:block}
         </div>
       </div>
 
+      <!-- WILAYAH CARD — BARU: Tabel Dalam & Luar Negeri -->
       <div class="map-card reveal" id="wilayah-card">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+        <div class="map-card-header">
           <div>
             <div class="section-label" style="margin-bottom:5px">Sebaran Wilayah</div>
-            <h3 class="section-title" style="font-size:19px">Alumni dari <em>Seluruh Indonesia</em></h3>
+            <h3 class="section-title" style="font-size:19px">Alumni SMK CALM <em>di Seluruh Penjuru</em></h3>
           </div>
           <span id="wilayah-badge" style="font-size:11.5px;color:var(--text-muted);background:var(--blue-pale);padding:5px 13px;border-radius:50px;font-weight:600">🗺️ Memuat...</span>
         </div>
-        <div class="province-grid" id="province-grid">
-          <div style="grid-column:1/-1;text-align:center;padding:22px;color:var(--text-muted);font-size:13px">⏳ Memuat data sebaran wilayah...</div>
+        <div class="wilayah-tables-wrap">
+          <!-- Tabel Dalam Negeri -->
+          <div class="wilayah-table-section">
+            <div class="wilayah-table-title">
+              <span class="wtitle-icon">🇮🇩</span> Dalam Negeri
+              <span class="wtitle-badge" id="badge-dn">–</span>
+            </div>
+            <div id="tabel-dalam-negeri">
+              <div class="wilayah-empty">⏳ Memuat data dalam negeri...</div>
+            </div>
+          </div>
+          <!-- Tabel Luar Negeri -->
+          <div class="wilayah-table-section">
+            <div class="wilayah-table-title">
+              <span class="wtitle-icon">🌐</span> Luar Negeri
+              <span class="wtitle-badge" id="badge-ln" style="background:#fff8e1;color:#e65100">–</span>
+            </div>
+            <div id="tabel-luar-negeri">
+              <div class="wilayah-empty">⏳ Memuat data luar negeri...</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -868,7 +928,7 @@ img,svg{display:block}
 
 <!-- FOOTER -->
 <footer id="alumni-footer">
-  <p>© 2025 <strong style="color:rgba(255,255,255,.45)">SMK Ciledug Al-Musaddadiyah</strong> — Alumni Tracker v2.2</p>
+  <p>© 2025 <strong style="color:rgba(255,255,255,.45)">SMK Ciledug Al-Musaddadiyah</strong> — Alumni Tracker v2.3</p>
   <p>
     <a onclick="showPage('dashboard')">Dashboard Alumni</a> ·
     <a onclick="showPage('form')">Form Pendaftaran</a> ·
@@ -918,6 +978,64 @@ const JURUSAN_MAP={
 function normalizeJurusan(raw){
   if(!raw)return'Lainnya';
   return JURUSAN_MAP[raw.trim().toLowerCase()]||raw.trim();
+}
+
+/* ── KATA KUNCI LUAR NEGERI ── */
+const LUAR_NEGERI_KEYWORDS=[
+  'luar negeri','korea','jepang','japan','malaysia','singapura','singapore',
+  'taiwan','hongkong','hong kong','australia','jerman','germany','belanda',
+  'netherlands','inggris','uk','united kingdom','amerika','usa','united states',
+  'arab saudi','saudi arabia','uni emirat arab','uae','dubai','qatar','kuwait',
+  'brunei','filipina','vietnam','thailand','timor leste','turki','turkey',
+  'mesir','egypt','india','china','tiongkok','perancis','france','italia','italy',
+  'spanyol','spain','kanada','canada','selandia baru','new zealand','rusia','russia'
+];
+
+function isLuarNegeri(namaWilayah){
+  const lower=namaWilayah.toLowerCase().trim();
+  return LUAR_NEGERI_KEYWORDS.some(kw=>lower.includes(kw));
+}
+
+/* ── FLAG MAP ── */
+const FLAG_DALAM={
+  'jawa barat':'🌋','garut':'🌋','bandung':'🌆','jakarta':'🏙️','dki jakarta':'🏙️',
+  'banten':'🏝️','tangerang':'🏝️','serang':'🏝️','jawa tengah':'🌊','semarang':'🌊',
+  'yogyakarta':'🏛️','jawa timur':'⛰️','surabaya':'⛰️','kalimantan':'🌴','borneo':'🌴',
+  'sumatera':'🏔️','medan':'🏔️','palembang':'🏔️','pekanbaru':'🏔️','padang':'🏔️',
+  'lampung':'🌿','bengkulu':'🌿','jambi':'🌿','aceh':'🕌','sulawesi':'🐚',
+  'makassar':'🐚','manado':'🐚','palu':'🐚','bali':'🌺','lombok':'🌺',
+  'nusa tenggara':'🌺','papua':'🦜','maluku':'🦜','ambon':'🦜','ternate':'🦜',
+  'kalimantan barat':'🌴','kalimantan timur':'🌴','kalimantan selatan':'🌴',
+  'kalimantan tengah':'🌴','kalimantan utara':'🌴','gorontalo':'🐚','sulawesi utara':'🐚',
+  'sulawesi selatan':'🐚','sulawesi tengah':'🐚','sulawesi tenggara':'🐚',
+  'sulawesi barat':'🐚','bekasi':'🏙️','depok':'🏙️','bogor':'🌿','sukabumi':'🌋',
+  'cianjur':'🌋','tasikmalaya':'🌋','cirebon':'🌊','indramayu':'🌊','subang':'🌋',
+  'purwakarta':'🌋','karawang':'🌋','sumedang':'🌋','majalengka':'🌋','kuningan':'🌋',
+};
+const FLAG_LUAR={
+  'korea':'🇰🇷','jepang':'🇯🇵','japan':'🇯🇵','malaysia':'🇲🇾','singapura':'🇸🇬',
+  'singapore':'🇸🇬','taiwan':'🇹🇼','hongkong':'🇭🇰','hong kong':'🇭🇰',
+  'australia':'🇦🇺','jerman':'🇩🇪','germany':'🇩🇪','belanda':'🇳🇱',
+  'netherlands':'🇳🇱','inggris':'🇬🇧','uk':'🇬🇧','united kingdom':'🇬🇧',
+  'amerika':'🇺🇸','usa':'🇺🇸','united states':'🇺🇸','arab saudi':'🇸🇦',
+  'saudi arabia':'🇸🇦','uni emirat arab':'🇦🇪','uae':'🇦🇪','dubai':'🇦🇪',
+  'qatar':'🇶🇦','kuwait':'🇰🇼','brunei':'🇧🇳','filipina':'🇵🇭',
+  'vietnam':'🇻🇳','thailand':'🇹🇭','timor leste':'🇹🇱','turki':'🇹🇷',
+  'turkey':'🇹🇷','mesir':'🇪🇬','egypt':'🇪🇬','india':'🇮🇳','china':'🇨🇳',
+  'tiongkok':'🇨🇳','perancis':'🇫🇷','france':'🇫🇷','italia':'🇮🇹','italy':'🇮🇹',
+  'spanyol':'🇪🇸','spain':'🇪🇸','kanada':'🇨🇦','canada':'🇨🇦',
+  'selandia baru':'🇳🇿','new zealand':'🇳🇿','rusia':'🇷🇺','russia':'🇷🇺',
+};
+
+function getDalamFlag(name){
+  const lower=name.toLowerCase();
+  for(const[k,f]of Object.entries(FLAG_DALAM)){if(lower.includes(k))return f;}
+  return'📍';
+}
+function getLuarFlag(name){
+  const lower=name.toLowerCase();
+  for(const[k,f]of Object.entries(FLAG_LUAR)){if(lower.includes(k))return f;}
+  return'🌐';
 }
 
 /* ── PAGE SWITCHER ── */
@@ -1109,15 +1227,11 @@ function showSuccess(p){
 function closeSuccess(){
   document.getElementById('success-overlay').classList.remove('show');
   document.body.style.overflow='';
-  // Reset btn
   const btn=document.getElementById('btn-submit');
   btn.disabled=false;btn.classList.remove('loading');
-  // Reset all form fields
   const fields=['f-nama','f-email','f-kontak','f-domisili','f-medsos','f-jurusan','f-tahun','f-status','f-kerja-tempat','f-kerja-jabatan','f-usaha-nama','f-usaha-bidang','f-kuliah-kampus','f-kuliah-prodi','f-pengalaman','f-pesan'];
   fields.forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-  // Reset char counters
   ['cnt-pengalaman','cnt-pesan'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='0/500';});
-  // Hide conditional blocks & error messages
   ['cond-kerja','cond-usaha','cond-kuliah'].forEach(id=>document.getElementById(id)?.classList.remove('show'));
   document.querySelectorAll('.field-error.show').forEach(el=>el.classList.remove('show'));
   document.querySelectorAll('.field-input.error,.field-select.error,.field-textarea.error').forEach(el=>el.classList.remove('error'));
@@ -1138,11 +1252,9 @@ function shareWhatsApp(){
 /* ── DATA LOADER ── */
 let _loadingController=null;
 async function loadAlumniData(forceRefresh=false){
-  // Cancel any in-flight request
   if(_loadingController){_loadingController.abort();}
   _loadingController=new AbortController();
   const signal=_loadingController.signal;
-  // Timeout after 10s
   const timeoutId=setTimeout(()=>_loadingController?.abort(),10000);
   const badge=document.getElementById('data-status-badge');
   const ts=document.getElementById('data-timestamp');
@@ -1257,22 +1369,89 @@ function updateDonut(d){
   if(dc)dc.textContent=Math.round(((d.bekerja+d.berwirausaha+d.kuliah)/total)*100)+'%';
 }
 
+/* ── WILAYAH: render tabel terpisah dalam & luar negeri ── */
+function buildWilayahTable(data, maxRow, isLuar){
+  /* data: array [[nama, jumlah], ...] sudah sorted */
+  const maxVal=data[0]?.[1]||1;
+  if(data.length===0){
+    return`<div class="wilayah-empty">${isLuar?'🌐 Belum ada data alumni luar negeri.':'📍 Belum ada data domisili dalam negeri.'}</div>`;
+  }
+  const rows=data.slice(0,maxRow).map(([nama,jumlah],i)=>{
+    const rankClass=i===0?'r1':i===1?'r2':i===2?'r3':'rn';
+    const flag=isLuar?getLuarFlag(nama):getDalamFlag(nama);
+    const barPct=Math.round((jumlah/maxVal)*100);
+    const barWidth=Math.max(barPct,4);
+    return`<tr>
+      <td style="width:32px"><span class="wt-rank ${rankClass}">${i+1}</span></td>
+      <td><span class="wt-name"><span>${flag}</span>${escHtml(nama)}</span></td>
+      <td>
+        <div class="wt-count-wrap">
+          <span class="wt-bar-mini" style="width:${barWidth}px;background:${isLuar?'linear-gradient(90deg,#e65100,#ff6d00)':'linear-gradient(90deg,#1565c0,#1e88e5)'}"></span>
+          <span class="wt-count">${parseInt(jumlah)||0}</span>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+  return`<table class="wilayah-table">
+    <thead><tr>
+      <th style="width:32px">#</th>
+      <th>${isLuar?'Negara / Kota':'Kota / Provinsi'}</th>
+      <th style="text-align:right">Alumni</th>
+    </tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+}
+
 function updateWilayah(wilayahData,total){
-  const grid=document.getElementById('province-grid');
   const badge=document.getElementById('wilayah-badge');
-  if(!grid)return;
-  const sorted=Object.entries(wilayahData).sort((a,b)=>b[1]-a[1]);
-  if(badge)badge.textContent=`🗺️ ${sorted.length}+ Kota/Provinsi`;
-  const flagMap={'jawa barat':'🌋','garut':'🌋','bandung':'🌆','jakarta':'🏙️','dki jakarta':'🏙️','banten':'🏝️','tangerang':'🏝️','serang':'🏝️','jawa tengah':'🌊','semarang':'🌊','jawa timur':'⛰️','surabaya':'⛰️','kalimantan':'🌴','borneo':'🌴','sumatera':'🏔️','medan':'🏔️','palembang':'🏔️','sulawesi':'🐚','makassar':'🐚','bali':'🌺','lombok':'🌺','papua':'🦜','maluku':'🦜','luar negeri':'🌐','korea':'🌐','jepang':'🌐','malaysia':'🌐'};
-  function getFlag(name){const lower=name.toLowerCase();for(const[k,f]of Object.entries(flagMap)){if(lower.includes(k))return f;}return'📍';}
-  grid.innerHTML=sorted.slice(0,9).map(([nama,jumlah])=>`<div class="province-chip"><div class="prov-flag">${getFlag(nama)}</div><div class="prov-count">${parseInt(jumlah)||0}</div><div class="prov-name">${escHtml(nama)}</div></div>`).join('');
+  const badgeDn=document.getElementById('badge-dn');
+  const badgeLn=document.getElementById('badge-ln');
+  const tblDn=document.getElementById('tabel-dalam-negeri');
+  const tblLn=document.getElementById('tabel-luar-negeri');
+
+  /* Pisahkan data */
+  const dalamNegeri=[];
+  const luarNegeri=[];
+  Object.entries(wilayahData).forEach(([nama,jumlah])=>{
+    if(isLuarNegeri(nama)){luarNegeri.push([nama,jumlah]);}
+    else{dalamNegeri.push([nama,jumlah]);}
+  });
+  dalamNegeri.sort((a,b)=>b[1]-a[1]);
+  luarNegeri.sort((a,b)=>b[1]-a[1]);
+
+  const totalDN=dalamNegeri.reduce((s,[,v])=>s+(parseInt(v)||0),0);
+  const totalLN=luarNegeri.reduce((s,[,v])=>s+(parseInt(v)||0),0);
+
+  if(badge)badge.textContent=`🗺️ ${dalamNegeri.length} Kota/Prov · ${luarNegeri.length} Negara`;
+  if(badgeDn)badgeDn.textContent=`${dalamNegeri.length} lokasi · ${totalDN} alumni`;
+  if(badgeLn)badgeLn.textContent=`${luarNegeri.length} negara · ${totalLN} alumni`;
+
+  if(tblDn)tblDn.innerHTML=buildWilayahTable(dalamNegeri,12,false);
+  if(tblLn)tblLn.innerHTML=buildWilayahTable(luarNegeri,10,true);
 }
 
 function updateWilayahFallback(){
-  const grid=document.getElementById('province-grid');
   const badge=document.getElementById('wilayah-badge');
+  const badgeDn=document.getElementById('badge-dn');
+  const badgeLn=document.getElementById('badge-ln');
+  const tblDn=document.getElementById('tabel-dalam-negeri');
+  const tblLn=document.getElementById('tabel-luar-negeri');
+
   if(badge)badge.textContent='🗺️ Data Estimasi';
-  if(grid)grid.innerHTML=[['🌋','1.240','Jawa Barat'],['🏙️','480','DKI Jakarta'],['🏝️','210','Banten'],['🌊','187','Jawa Tengah'],['⛰️','143','Jawa Timur'],['🌴','98','Kalimantan'],['🏔️','76','Sumatera'],['🐚','45','Sulawesi'],['🌐','89','Luar Negeri']].map(([flag,count,name])=>`<div class="province-chip"><div class="prov-flag">${flag}</div><div class="prov-count">${count}</div><div class="prov-name">${name}</div></div>`).join('');
+  if(badgeDn)badgeDn.textContent='9 lokasi · 2.758 alumni';
+  if(badgeLn)badgeLn.textContent='4 negara · 89 alumni';
+
+  const fallbackDN=[
+    ['Garut, Jawa Barat',1240],['Bandung, Jawa Barat',410],['Jakarta',280],
+    ['Bekasi',180],['Tangerang, Banten',130],['Bogor, Jawa Barat',110],
+    ['Surabaya, Jawa Timur',143],['Semarang, Jawa Tengah',98],['Depok',76],
+  ];
+  const fallbackLN=[
+    ['Korea Selatan',42],['Jepang',24],['Malaysia',15],['Arab Saudi',8],
+  ];
+
+  if(tblDn)tblDn.innerHTML=buildWilayahTable(fallbackDN,12,false);
+  if(tblLn)tblLn.innerHTML=buildWilayahTable(fallbackLN,10,true);
 }
 
 function updateStories(stories){
