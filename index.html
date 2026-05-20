@@ -493,7 +493,7 @@ img,svg{display:block}
 @keyframes fadeInUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
 .reveal{opacity:0;transform:translateY(22px);transition:opacity .65s cubic-bezier(.22,1,.36,1),transform .65s cubic-bezier(.22,1,.36,1)}
 .reveal.visible{opacity:1;transform:none}
-.counter-num{display:inline-block;min-width:2ch}
+.counter-num{display:inline-block;min-width:3ch}
 
 /* ── RESPONSIVE ── */
 @media(max-width:1024px){
@@ -542,7 +542,7 @@ img,svg{display:block}
 <!-- NAV -->
 <nav id="alumni-nav">
   <div class="nav-inner">
-    <a class="nav-brand" onclick="showPage('dashboard');return false" href="#" role="button" aria-label="Alumni Tracker Beranda">
+    <a class="nav-brand" onclick="showPage('dashboard');return false" href="#beranda" role="button" aria-label="Alumni Tracker Beranda">
       <div class="nav-brand-icon">🎓</div>
       <div class="nav-brand-text">
         <span>Alumni Tracker</span>
@@ -1048,12 +1048,18 @@ function showPage(name){
   document.querySelectorAll('.mobile-nav-btn').forEach(b=>b.classList.remove('active'));
   const mb=document.getElementById('mnav-'+name);
   if(mb)mb.classList.add('active');
-  window.scrollTo({top:0,behavior:'smooth'});
+  window.scrollTo({top:0,behavior:'instant'});
 }
 
 /* ── NAV SCROLL ── */
+let _scrollRaf=false;
 window.addEventListener('scroll',()=>{
-  document.getElementById('alumni-nav').classList.toggle('scrolled',window.scrollY>30);
+  if(_scrollRaf)return;
+  _scrollRaf=true;
+  requestAnimationFrame(()=>{
+    document.getElementById('alumni-nav').classList.toggle('scrolled',window.scrollY>30);
+    _scrollRaf=false;
+  });
 },{passive:true});
 
 /* ── COUNTER ANIMATION ── */
@@ -1077,7 +1083,10 @@ const io=new IntersectionObserver(entries=>{
   entries.forEach(e=>{
     if(e.isIntersecting){
       e.target.classList.add('visible');
-      e.target.querySelectorAll('.big-num[data-target]').forEach(el=>animateCounter(el));
+      e.target.querySelectorAll('.big-num[data-target]').forEach(el=>{
+        const t=parseInt(el.dataset.target,10);
+        if(!isNaN(t))animateCounter(el,t,el.dataset.suffix||'');
+      });
       io.unobserve(e.target);
     }
   });
@@ -1146,7 +1155,9 @@ function validate(){
   required.forEach(({id,err})=>{
     const el=document.getElementById(id);
     const errEl=document.getElementById(err);
-    if(!el||!el.value.trim()){
+    const val=el?el.value:'';
+    const isEmpty=!val||(el.tagName!=='SELECT'&&!val.trim());
+    if(isEmpty){
       el?.classList.add('error');
       if(errEl)errEl.classList.add('show');
       ok=false;
@@ -1252,17 +1263,25 @@ function shareWhatsApp(){
 /* ── DATA LOADER ── */
 let _loadingController=null;
 async function loadAlumniData(forceRefresh=false){
-  if(_loadingController){_loadingController.abort();}
-  _loadingController=new AbortController();
-  const signal=_loadingController.signal;
-  const timeoutId=setTimeout(()=>_loadingController?.abort(),10000);
+  if(_loadingController){
+    try{_loadingController.abort();}catch(_){}
+    _loadingController=null;
+  }
+  /* Reset auto-refresh timer so it doesn't double-fire soon after a manual refresh */
+  if(forceRefresh){
+    clearInterval(refreshTimer);
+    refreshTimer=setInterval(()=>loadAlumniData(false),5*60*1000);
+  }
+  const ctrl=new AbortController();
+  _loadingController=ctrl;
+  const timeoutId=setTimeout(()=>{try{ctrl.abort();}catch(_){}},10000);
   const badge=document.getElementById('data-status-badge');
   const ts=document.getElementById('data-timestamp');
   const refreshBtn=document.getElementById('refresh-btn');
   if(refreshBtn)refreshBtn.classList.add('spinning');
   const url=forceRefresh?APPS_SCRIPT_URL+'?t='+Date.now():APPS_SCRIPT_URL;
   try{
-    const res=await fetch(url,{signal});
+    const res=await fetch(url,{signal:ctrl.signal});
     const d=await res.json();
     if(d.error){showDataError('Gagal memuat: '+d.error);return;}
     if(d.jurusan){
@@ -1291,6 +1310,7 @@ async function loadAlumniData(forceRefresh=false){
     if(badge){badge.style.display='inline-flex';badge.className='data-status live';badge.textContent='Data Live dari Google Sheets';}
     if(forceRefresh)showToast('✅ Data berhasil diperbarui!',false);
   } catch(e){
+    if(e&&e.name==='AbortError')return; /* silently cancel — either timeout or new request */
     showDataError('Koneksi gagal — menampilkan data estimasi');
     loadFallbackData();
   } finally{
@@ -1318,12 +1338,18 @@ function loadFallbackData(){
 function setHeroCounter(id,value,suffix){
   const el=document.querySelector(`[data-id="${id}"]`);
   if(!el)return;
+  /* Remove skeleton placeholder before animating */
+  const sk=el.querySelector('.skeleton');
+  if(sk)sk.remove();
   el.dataset.target=value;el.dataset.suffix=suffix;
   animateCounter(el,value,suffix);
 }
 function setBigNum(id,value){
   const el=document.querySelector(`[data-id="${id}"]`);
   if(!el)return;
+  /* Remove skeleton placeholder before animating */
+  const sk=el.querySelector('.skeleton');
+  if(sk)sk.remove();
   el.dataset.target=value;
   animateCounter(el,value,'');
 }
@@ -1366,7 +1392,10 @@ function updateDonut(d){
     const el=document.getElementById(id);if(el)el.textContent=pct(v);
   });
   const dc=document.getElementById('donut-center');
-  if(dc)dc.textContent=Math.round(((d.bekerja+d.berwirausaha+d.kuliah)/total)*100)+'%';
+  if(dc){
+    const absorbed=(d.bekerja||0)+(d.berwirausaha||0)+(d.kuliah||0);
+    dc.textContent=Math.round((absorbed/total)*100)+'%';
+  }
 }
 
 /* ── WILAYAH: render tabel terpisah dalam & luar negeri ── */
