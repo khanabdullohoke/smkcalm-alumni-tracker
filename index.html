@@ -1256,7 +1256,7 @@ function shareWhatsApp(){
   const nama=document.getElementById('s-nama').textContent;
   const tahun=document.getElementById('s-tahun').textContent;
   const jurusan=document.getElementById('s-jurusan').textContent;
-  const msg=encodeURIComponent(`Alhamdulillah, saya sudah mendaftar sebagai alumni SMK CALM Garut! 🎓\n\nNama: ${nama}\nJurusan: ${jurusan}\nAngkatan: ${tahun}\n\nAyo, alumni CALM lainnya juga daftar ya!\n👉 ${window.location.href}`);
+  const msg=encodeURIComponent(`Alhamdulillah, saya sudah mendaftar sebagai alumni SMK CALM Garut! 🎓\n\nNama: ${nama}\nJurusan: ${jurusan}\nAngkatan: ${tahun}\n\nAyo, alumni CALM lainnya juga daftar ya!\n👉 https://www.smkciledugalmusaddadiyah.sch.id/p/alumni-tracker.html`);
   window.open('https://wa.me/?text='+msg,'_blank');
 }
 
