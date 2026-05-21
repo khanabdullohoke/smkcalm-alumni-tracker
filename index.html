@@ -1260,59 +1260,91 @@ function shareWhatsApp(){
   window.open('https://wa.me/?text='+msg,'_blank');
 }
 
-/* ── DATA LOADER ── */
-let _loadingController=null;
-async function loadAlumniData(forceRefresh=false){
-  if(_loadingController){
-    try{_loadingController.abort();}catch(_){}
-    _loadingController=null;
-  }
-  /* Reset auto-refresh timer so it doesn't double-fire soon after a manual refresh */
-  if(forceRefresh){
-    clearInterval(refreshTimer);
-    refreshTimer=setInterval(()=>loadAlumniData(false),5*60*1000);
-  }
-  const ctrl=new AbortController();
-  _loadingController=ctrl;
-  const timeoutId=setTimeout(()=>{try{ctrl.abort();}catch(_){}},10000);
-  const badge=document.getElementById('data-status-badge');
-  const ts=document.getElementById('data-timestamp');
-  const refreshBtn=document.getElementById('refresh-btn');
-  if(refreshBtn)refreshBtn.classList.add('spinning');
-  const url=forceRefresh?APPS_SCRIPT_URL+'?t='+Date.now():APPS_SCRIPT_URL;
+/* ── CACHE localStorage ── */
+const CACHE_KEY='alumni_cache_v1';
+const CACHE_TTL=10*60*1000;
+function saveCache(data){try{localStorage.setItem(CACHE_KEY,JSON.stringify({ts:Date.now(),data}));}catch(_){}}
+function loadCache(){
   try{
-    const res=await fetch(url,{signal:ctrl.signal});
-    const d=await res.json();
-    if(d.error){showDataError('Gagal memuat: '+d.error);return;}
-    if(d.jurusan){
-      const norm={};
-      Object.entries(d.jurusan).forEach(([k,v])=>{const key=normalizeJurusan(k);norm[key]=(norm[key]||0)+v;});
-      d.jurusan=norm;
-    }
-    setHeroCounter('total',d.total||0,'');
-    setHeroCounter('terserap',d.terserap||0,'%');
-    setHeroCounter('angkatan',d.angkatan||0,'');
-    setBigNum('bekerja',d.bekerja||0);
-    setBigNum('kuliah',d.kuliah||0);
-    setBigNum('lainnya',d.lainnya||0);
-    setBigNum('berwirausaha',d.berwirausaha||0);
-    if(d.jurusan&&Object.keys(d.jurusan).length>0){
-      updateBarChart(d.jurusan);
-    } else {
-      document.getElementById('bar-chart-jurusan').innerHTML='<div style="color:var(--text-muted);font-size:13px;padding:18px 0;text-align:center">Belum ada data jurusan.</div>';
-    }
-    if(d.total>0)updateDonut(d);
-    if(d.wilayah&&Object.keys(d.wilayah).length>0){updateWilayah(d.wilayah,d.total||0);}
-    else{updateWilayahFallback();}
-    if(d.stories&&d.stories.length>0){updateStories(d.stories);}
-    else{document.getElementById('stories-grid').innerHTML='<div class="stories-empty" style="grid-column:1/-1">📭 Belum ada alumni yang berbagi kisah. <button class="btn-gold" onclick="showPage(\'form\')" style="margin-left:10px;font-size:11.5px;padding:6px 14px">Jadilah yang pertama!</button></div>';}
+    const raw=localStorage.getItem(CACHE_KEY);if(!raw)return null;
+    const obj=JSON.parse(raw);
+    if(Date.now()-obj.ts>CACHE_TTL)return null;
+    return obj.data;
+  }catch(_){return null;}
+}
+function clearCache(){try{localStorage.removeItem(CACHE_KEY);}catch(_){}}
+
+/* ── RENDER DATA ── */
+function renderData(d,source){
+  if(d.jurusan){
+    const norm={};
+    Object.entries(d.jurusan).forEach(([k,v])=>{const key=normalizeJurusan(k);norm[key]=(norm[key]||0)+v;});
+    d.jurusan=norm;
+  }
+  setHeroCounter('total',d.total||0,'');
+  setHeroCounter('terserap',d.terserap||0,'%');
+  setHeroCounter('angkatan',d.angkatan||0,'');
+  setBigNum('bekerja',d.bekerja||0);
+  setBigNum('kuliah',d.kuliah||0);
+  setBigNum('lainnya',d.lainnya||0);
+  setBigNum('berwirausaha',d.berwirausaha||0);
+  if(d.jurusan&&Object.keys(d.jurusan).length>0){
+    updateBarChart(d.jurusan);
+  } else {
+    document.getElementById('bar-chart-jurusan').innerHTML='<div style="color:var(--text-muted);font-size:13px;padding:18px 0;text-align:center">Belum ada data jurusan.</div>';
+  }
+  if(d.total>0)updateDonut(d);
+  if(d.wilayah&&Object.keys(d.wilayah).length>0){updateWilayah(d.wilayah,d.total||0);}
+  else{updateWilayahFallback();}
+  if(d.stories&&d.stories.length>0){updateStories(d.stories);}
+  else{document.getElementById('stories-grid').innerHTML='<div class="stories-empty" style="grid-column:1/-1">Belum ada alumni yang berbagi kisah. <button class="btn-gold" onclick="showPage(\'form\')" style="margin-left:10px;font-size:11.5px;padding:6px 14px">Jadilah yang pertama!</button></div>';}
+  const ts=document.getElementById('data-timestamp');
+  const badge=document.getElementById('data-status-badge');
+  if(source==='live'){
     if(ts&&d.lastUpdated)ts.textContent='Data per '+d.lastUpdated;
     if(badge){badge.style.display='inline-flex';badge.className='data-status live';badge.textContent='Data Live dari Google Sheets';}
-    if(forceRefresh)showToast('✅ Data berhasil diperbarui!',false);
-  } catch(e){
-    if(e&&e.name==='AbortError')return; /* silently cancel — either timeout or new request */
-    showDataError('Koneksi gagal — menampilkan data estimasi');
+  } else if(source==='cache'){
+    if(ts)ts.textContent='Data dari cache lokal';
+    if(badge){badge.style.display='inline-flex';badge.className='data-status live';badge.textContent='Cache — memperbarui...';}
+  }
+}
+
+/* ── DATA LOADER — Stale-while-revalidate ── */
+let _loadingController=null;
+async function loadAlumniData(forceRefresh=false){
+  if(_loadingController){try{_loadingController.abort();}catch(_){}_loadingController=null;}
+  if(forceRefresh){clearInterval(refreshTimer);refreshTimer=setInterval(()=>loadAlumniData(false),10*60*1000);clearCache();}
+  const refreshBtn=document.getElementById('refresh-btn');
+  if(refreshBtn)refreshBtn.classList.add('spinning');
+
+  /* 1) Tampilkan cache LANGSUNG jika tersedia - user tidak perlu nunggu */
+  const cached=loadCache();
+  if(cached&&!forceRefresh){
+    renderData(cached,'cache');
+  } else {
     loadFallbackData();
+  }
+
+  /* 2) Fetch live di background */
+  const ctrl=new AbortController();
+  _loadingController=ctrl;
+  const timeoutId=setTimeout(()=>{try{ctrl.abort();}catch(_){}},8000);
+  const url=APPS_SCRIPT_URL+(forceRefresh?'?t='+Date.now():'');
+  try{
+    const res=await fetch(url,{signal:ctrl.signal,cache:'no-store'});
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    const d=await res.json();
+    if(d.error)throw new Error(d.error);
+    saveCache(d);
+    renderData(d,'live');
+    if(forceRefresh)showToast('Data berhasil diperbarui!',false);
+  } catch(e){
+    if(e&&e.name==='AbortError'){
+      if(!cached)showDataError('Koneksi lambat — menampilkan data estimasi');
+      return;
+    }
+    if(!cached)showDataError('Koneksi gagal — menampilkan data estimasi');
+    if(forceRefresh)showToast('Gagal memperbarui. Cek koneksimu.',true);
   } finally{
     clearTimeout(timeoutId);
     _loadingController=null;
@@ -1502,7 +1534,7 @@ function updateStories(stories){
 function escHtml(str){if(!str)return'';return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
 /* ── AUTO REFRESH 5 MIN ── */
-let refreshTimer=setInterval(()=>loadAlumniData(false),5*60*1000);
+let refreshTimer=setInterval(()=>loadAlumniData(false),10*60*1000);
 
 /* ── INIT ── */
 document.addEventListener('DOMContentLoaded',()=>loadAlumniData(false));
