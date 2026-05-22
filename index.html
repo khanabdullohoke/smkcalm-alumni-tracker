@@ -331,8 +331,8 @@ img,svg{display:block}
 
 /* ── STORIES PAGINATION ── */
 .stories-nav{
-  display:flex;align-items:center;justify-content:center;gap:14px;
-  margin-top:32px;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  margin-top:32px;flex-wrap:wrap;
 }
 .stories-nav-btn{
   width:40px;height:40px;border-radius:50%;border:2px solid rgba(30,136,229,.2);
@@ -343,18 +343,27 @@ img,svg{display:block}
 }
 .stories-nav-btn:hover:not(:disabled){background:var(--blue-mid);color:#fff;border-color:var(--blue-mid);box-shadow:0 4px 16px rgba(21,101,192,.3);transform:translateY(-1px)}
 .stories-nav-btn:disabled{opacity:.3;cursor:not-allowed;transform:none}
-.stories-nav-dots{display:flex;gap:7px;align-items:center}
+.stories-nav-dots{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:center;max-width:100%}
 .stories-dot{
   width:8px;height:8px;border-radius:50%;background:rgba(30,136,229,.2);
-  cursor:pointer;transition:all var(--transition);border:none;padding:0;
+  cursor:pointer;transition:all var(--transition);border:none;padding:0;flex-shrink:0;
 }
 .stories-dot.active{background:var(--blue-mid);width:22px;border-radius:4px}
 .stories-dot:hover:not(.active){background:rgba(30,136,229,.45)}
 .stories-page-info{
   font-size:11.5px;font-weight:700;color:var(--text-muted);
   background:var(--blue-pale);padding:4px 13px;border-radius:50px;
-  white-space:nowrap;
+  white-space:nowrap;flex-shrink:0;
 }
+@media(max-width:480px){
+  .stories-nav{gap:8px}
+  .stories-nav-btn{width:36px;height:36px;font-size:15px}
+  .stories-nav-dots{max-width:calc(100vw - 120px);gap:5px}
+  .stories-dot{width:7px;height:7px}
+  .stories-dot.active{width:18px}
+  .stories-page-info{font-size:10.5px;padding:3px 10px}
+}
+.stories-nav-center{display:flex;flex-direction:column;align-items:center;gap:8px;flex:1;min-width:0}
 .stories-grid-wrap{overflow:hidden;position:relative}
 .stories-grid{
   display:grid;grid-template-columns:repeat(3,1fr);gap:20px;
@@ -781,8 +790,10 @@ img,svg{display:block}
       </div>
       <div class="stories-nav" id="stories-nav" style="display:none">
         <button class="stories-nav-btn" id="stories-prev" onclick="storiesPage(-1)" aria-label="Alumni sebelumnya" title="Sebelumnya">&#8592;</button>
-        <div class="stories-nav-dots" id="stories-dots"></div>
-        <span class="stories-page-info" id="stories-page-info"></span>
+        <div class="stories-nav-center">
+          <div class="stories-nav-dots" id="stories-dots"></div>
+          <span class="stories-page-info" id="stories-page-info"></span>
+        </div>
         <button class="stories-nav-btn" id="stories-next" onclick="storiesPage(1)" aria-label="Alumni berikutnya" title="Berikutnya">&#8594;</button>
       </div>
     </div>
