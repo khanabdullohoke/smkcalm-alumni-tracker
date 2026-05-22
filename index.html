@@ -1338,7 +1338,10 @@ function renderData(d,source){
   if(d.total>0)updateDonut(d);
   if(d.wilayah&&Object.keys(d.wilayah).length>0){updateWilayah(d.wilayah,d.total||0);}
   else{updateWilayahFallback();}
-  if(d.stories&&d.stories.length>0){updateStories(d.stories);}
+  /* Filter: hanya alumni yang isi pesan, tapi jangan batasi jumlah */
+  const allStories=(d.stories||[]).filter(s=>s&&s.nama&&s.pesan&&s.pesan.trim().length>0);
+  console.log('[Alumni Tracker] Total stories dari server:',d.stories?.length||0,'| yang punya pesan:',allStories.length);
+  if(allStories.length>0){updateStories(allStories);}
   else{document.getElementById('stories-grid').innerHTML='<div class="stories-empty" style="grid-column:1/-1">Belum ada alumni yang berbagi kisah. <button class="btn-gold" onclick="showPage(\'form\')" style="margin-left:10px;font-size:11.5px;padding:6px 14px">Jadilah yang pertama!</button></div>';}
   const ts=document.getElementById('data-timestamp');
   const badge=document.getElementById('data-status-badge');
@@ -1407,6 +1410,17 @@ function loadFallbackData(){
   updateBarChart({'Akuntansi Keuangan Lembaga':680,'Teknik Jaringan Komputer':620,'Desain Komunikasi Visual':440,'Teknik Kendaraan Ringan':380,'Bisnis Digital':310,'Manajemen Perkantoran':260,'Teknik Sepeda Motor':157});
   updateDonut({bekerja:1423,berwirausaha:134,kuliah:612,lainnya:234});
   updateWilayahFallback();
+  updateStories([
+    {nama:'Ahmad Fauzi',jurusan:'Teknik Jaringan Komputer',tahunLulus:2020,status:'Bekerja',detail:'PT Telkom Indonesia',pesan:'SMK CALM membuka jalan karirku di dunia IT. Jangan menyerah!',domisili:'Bandung, Jawa Barat'},
+    {nama:'Siti Nurhaliza',jurusan:'Akuntansi Keuangan Lembaga',tahunLulus:2019,status:'Berwirausaha',detail:'Toko Online',pesan:'Ilmu akuntansi dari SMK CALM sangat berguna untuk kelola keuangan usaha saya.',domisili:'Garut, Jawa Barat'},
+    {nama:'Rizky Pratama',jurusan:'Desain Komunikasi Visual',tahunLulus:2021,status:'Bekerja',detail:'Agensi Kreatif Bandung',pesan:'DKV di SMK CALM mengajarkan saya desain profesional sejak dini.',domisili:'Bandung, Jawa Barat'},
+    {nama:'Dewi Rahayu',jurusan:'Bisnis Digital',tahunLulus:2022,status:'Kuliah',detail:'Universitas Padjadjaran',pesan:'Berkat SMK CALM saya lolos beasiswa ke Unpad. Semangat adik kelas!',domisili:'Bandung, Jawa Barat'},
+    {nama:'Hendra Gunawan',jurusan:'Teknik Kendaraan Ringan',tahunLulus:2018,status:'Berwirausaha',detail:'Bengkel Hendra Motor',pesan:'Skill dari SMK CALM jadi modal utama saya buka bengkel sendiri.',domisili:'Garut, Jawa Barat'},
+    {nama:'Nurul Fauziah',jurusan:'Manajemen Perkantoran',tahunLulus:2020,status:'Bekerja',detail:'Dinas Pendidikan Kabupaten Garut',pesan:'SMK CALM membekali saya kemampuan administrasi yang handal.',domisili:'Garut, Jawa Barat'},
+    {nama:'Dian Permana',jurusan:'Teknik Jaringan Komputer',tahunLulus:2021,status:'Bekerja',detail:'Startup Teknologi Jakarta',pesan:'Dari Garut ke Jakarta, SMK CALM jadi batu loncatan terbaik.',domisili:'Jakarta'},
+    {nama:'Rina Marlina',jurusan:'Akuntansi Keuangan Lembaga',tahunLulus:2019,status:'Kuliah',detail:'Universitas Indonesia',pesan:'Fondasi akuntansi dari SMK CALM membantu saya bersaing di UI.',domisili:'Depok, Jawa Barat'},
+    {nama:'Bagas Saputra',jurusan:'Desain Komunikasi Visual',tahunLulus:2022,status:'Magang',detail:'Studio Animasi Bandung',pesan:'Magang di studio animasi impian, semua berawal dari pelajaran DKV CALM.',domisili:'Bandung, Jawa Barat'},
+  ]);
 }
 
 function setHeroCounter(id,value,suffix){
