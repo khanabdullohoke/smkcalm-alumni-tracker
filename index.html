@@ -329,6 +329,40 @@ img,svg{display:block}
 .story-location{font-size:11.5px;font-weight:600;color:var(--blue-bright);display:flex;align-items:center;gap:4px}
 .stories-empty{text-align:center;padding:36px;color:var(--text-muted);font-size:14px;background:#fff;border-radius:var(--radius);border:1.5px dashed rgba(30,136,229,.2)}
 
+/* ── STORIES PAGINATION ── */
+.stories-nav{
+  display:flex;align-items:center;justify-content:center;gap:14px;
+  margin-top:32px;
+}
+.stories-nav-btn{
+  width:40px;height:40px;border-radius:50%;border:2px solid rgba(30,136,229,.2);
+  background:#fff;color:var(--blue-mid);font-size:17px;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  transition:all var(--transition);box-shadow:0 2px 8px rgba(30,136,229,.1);
+  flex-shrink:0;
+}
+.stories-nav-btn:hover:not(:disabled){background:var(--blue-mid);color:#fff;border-color:var(--blue-mid);box-shadow:0 4px 16px rgba(21,101,192,.3);transform:translateY(-1px)}
+.stories-nav-btn:disabled{opacity:.3;cursor:not-allowed;transform:none}
+.stories-nav-dots{display:flex;gap:7px;align-items:center}
+.stories-dot{
+  width:8px;height:8px;border-radius:50%;background:rgba(30,136,229,.2);
+  cursor:pointer;transition:all var(--transition);border:none;padding:0;
+}
+.stories-dot.active{background:var(--blue-mid);width:22px;border-radius:4px}
+.stories-dot:hover:not(.active){background:rgba(30,136,229,.45)}
+.stories-page-info{
+  font-size:11.5px;font-weight:700;color:var(--text-muted);
+  background:var(--blue-pale);padding:4px 13px;border-radius:50px;
+  white-space:nowrap;
+}
+.stories-grid-wrap{overflow:hidden;position:relative}
+.stories-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:20px;
+  transition:opacity .28s ease,transform .28s ease;
+}
+.stories-grid.animating{opacity:0;transform:translateX(18px)}
+.stories-grid.animating-prev{opacity:0;transform:translateX(-18px)}
+
 /* ── CTA ── */
 #cta-section{
   background:linear-gradient(135deg,#061e5c,#0b3d91 40%,#1565c0 100%);
@@ -740,8 +774,16 @@ img,svg{display:block}
         <h2 class="section-title">Suara <em>Alumni CALM</em></h2>
         <p class="section-sub">Kisah nyata lulusan yang kini berkarya dan menginspirasi. Diperbarui otomatis setiap ada alumni baru mendaftar.</p>
       </div>
-      <div id="stories-grid" class="stories-grid reveal">
-        <div class="stories-empty" style="grid-column:1/-1">⏳ Memuat kisah alumni...</div>
+      <div class="stories-grid-wrap reveal">
+        <div id="stories-grid" class="stories-grid">
+          <div class="stories-empty" style="grid-column:1/-1">⏳ Memuat kisah alumni...</div>
+        </div>
+      </div>
+      <div class="stories-nav" id="stories-nav" style="display:none">
+        <button class="stories-nav-btn" id="stories-prev" onclick="storiesPage(-1)" aria-label="Alumni sebelumnya" title="Sebelumnya">&#8592;</button>
+        <div class="stories-nav-dots" id="stories-dots"></div>
+        <span class="stories-page-info" id="stories-page-info"></span>
+        <button class="stories-nav-btn" id="stories-next" onclick="storiesPage(1)" aria-label="Alumni berikutnya" title="Berikutnya">&#8594;</button>
       </div>
     </div>
   </section>
@@ -1515,20 +1557,89 @@ function updateWilayahFallback(){
   if(tblLn)tblLn.innerHTML=buildWilayahTable(fallbackLN,10,true);
 }
 
-function updateStories(stories){
+/* ── STORIES PAGINATION ── */
+let _allStories=[];
+let _storiesPage=0;
+const STORIES_PER_PAGE=6;
+
+function storiesPage(dir){
+  const totalPages=Math.ceil(_allStories.length/STORIES_PER_PAGE);
+  const newPage=_storiesPage+dir;
+  if(newPage<0||newPage>=totalPages)return;
   const grid=document.getElementById('stories-grid');
+  if(grid){
+    grid.classList.add(dir>0?'animating':'animating-prev');
+    setTimeout(()=>{
+      _storiesPage=newPage;
+      renderStoriesPage();
+      grid.classList.remove('animating','animating-prev');
+    },230);
+  }else{
+    _storiesPage=newPage;
+    renderStoriesPage();
+  }
+}
+
+function renderStoriesPage(){
+  const grid=document.getElementById('stories-grid');
+  const nav=document.getElementById('stories-nav');
+  const prevBtn=document.getElementById('stories-prev');
+  const nextBtn=document.getElementById('stories-next');
+  const dotsEl=document.getElementById('stories-dots');
+  const pageInfo=document.getElementById('stories-page-info');
   if(!grid)return;
+  const totalPages=Math.ceil(_allStories.length/STORIES_PER_PAGE);
+  const start=_storiesPage*STORIES_PER_PAGE;
+  const slice=_allStories.slice(start,start+STORIES_PER_PAGE);
   const gradients=['linear-gradient(135deg,var(--blue-mid),var(--blue-bright))','linear-gradient(135deg,#7b1fa2,#ab47bc)','linear-gradient(135deg,#1b5e20,#388e3c)','linear-gradient(135deg,#e65100,#ff6d00)','linear-gradient(135deg,#0097a7,#00bcd4)','linear-gradient(135deg,#ad1457,#ec407a)'];
   const statusEmoji={'bekerja':'💼','berwirausaha':'🚀','melanjutkan pendidikan':'🎓','kuliah':'🎓','magang':'🔧','mencari pekerjaan':'🔍'};
   function getStatusEmoji(st){if(!st)return'🎓';const lower=st.toLowerCase();for(const[k,e]of Object.entries(statusEmoji)){if(lower.includes(k))return e;}return'🎓';}
-  grid.innerHTML=stories.map((s,i)=>{
+  grid.innerHTML=slice.map((s,i)=>{
+    const gi=start+i;
     const initial=s.nama?s.nama.split(' ').filter(Boolean).map(w=>w[0]).join('').toUpperCase().slice(0,2):'?';
-    const grad=gradients[i%gradients.length];
+    const grad=gradients[gi%gradients.length];
     const emoji=getStatusEmoji(s.status);
-    const badgeBg=i%2===0?'var(--blue-pale)':'#f3e5f5';
-    const badgeColor=i%2===0?'var(--blue-mid)':'#7b1fa2';
+    const badgeBg=gi%2===0?'var(--blue-pale)':'#f3e5f5';
+    const badgeColor=gi%2===0?'var(--blue-mid)':'#7b1fa2';
     return`<article class="story-card"><div class="story-header" style="background:${grad}"><div class="story-avatar" style="background:rgba(255,255,255,.15)">${initial}</div><div><div class="story-name">${escHtml(s.nama)}</div><div class="story-jurusan">${escHtml(s.jurusan||'Alumni CALM')}${s.tahunLulus?' · Angkatan '+escHtml(String(s.tahunLulus)):''}</div></div></div><div class="story-body"><div class="story-badge" style="background:${badgeBg};color:${badgeColor}">${emoji} ${escHtml(s.status||'Alumni')}</div>${s.detail?`<div style="font-size:11.5px;font-weight:600;color:var(--blue-mid);margin-bottom:7px">🏢 ${escHtml(s.detail)}</div>`:''}<p class="story-quote">"${escHtml(s.pesan)}"</p><div class="story-location">📍 ${escHtml(s.domisili||'Indonesia')}</div></div></article>`;
   }).join('');
+  /* nav update */
+  if(nav){
+    if(totalPages>1){
+      nav.style.display='flex';
+      if(prevBtn)prevBtn.disabled=_storiesPage===0;
+      if(nextBtn)nextBtn.disabled=_storiesPage===totalPages-1;
+      if(pageInfo)pageInfo.textContent=`${_storiesPage+1} / ${totalPages}`;
+      if(dotsEl){
+        dotsEl.innerHTML=Array.from({length:totalPages},(_,i)=>
+          `<button class="stories-dot${i===_storiesPage?' active':''}" onclick="storiesGoTo(${i})" aria-label="Halaman ${i+1}" title="Halaman ${i+1}"></button>`
+        ).join('');
+      }
+    }else{nav.style.display='none';}
+  }
+}
+
+function storiesGoTo(page){
+  const dir=page-_storiesPage;
+  if(dir===0)return;
+  const grid=document.getElementById('stories-grid');
+  if(grid){
+    grid.classList.add(dir>0?'animating':'animating-prev');
+    setTimeout(()=>{
+      _storiesPage=page;
+      renderStoriesPage();
+      grid.classList.remove('animating','animating-prev');
+    },230);
+  }else{
+    _storiesPage=page;
+    renderStoriesPage();
+  }
+}
+
+function updateStories(stories){
+  _allStories=stories||[];
+  _storiesPage=0;
+  renderStoriesPage();
 }
 
 function escHtml(str){if(!str)return'';return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
