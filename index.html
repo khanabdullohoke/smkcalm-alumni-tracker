@@ -947,9 +947,9 @@ img,svg{display:block}
             <div class="field-error" id="err-nama" role="alert">Nama lengkap wajib diisi.</div>
           </div>
           <div class="field-group">
-            <label class="field-label" for="f-email">Alamat Email</label>
-            <input id="f-email" class="field-input" type="email" placeholder="contoh@email.com" autocomplete="email"/>
-            <div class="field-hint">Opsional, untuk konfirmasi</div>
+            <label class="field-label" for="f-email">Alamat Email <span class="req" aria-hidden="true">*</span></label>
+            <input id="f-email" class="field-input" type="email" placeholder="contoh@email.com" required autocomplete="email" aria-required="true"/>
+            <div class="field-error" id="err-email" role="alert">Email wajib diisi dengan format yang valid.</div>
           </div>
         </div>
         <div class="field-group">
@@ -964,9 +964,9 @@ img,svg{display:block}
             <div class="field-error" id="err-domisili" role="alert">Domisili wajib diisi.</div>
           </div>
           <div class="field-group">
-            <label class="field-label" for="f-medsos">Akun Media Sosial</label>
-            <input id="f-medsos" class="field-input" type="text" placeholder="Instagram / LinkedIn"/>
-            <div class="field-hint">Opsional, untuk jaringan alumni</div>
+            <label class="field-label" for="f-medsos">Akun Media Sosial <span class="req" aria-hidden="true">*</span></label>
+            <input id="f-medsos" class="field-input" type="text" placeholder="@instagram atau linkedin.com/in/..." required aria-required="true"/>
+            <div class="field-error" id="err-medsos" role="alert">Akun media sosial wajib diisi.</div>
           </div>
         </div>
 
@@ -1013,30 +1013,31 @@ img,svg{display:block}
         </div>
         <div class="cond-block" id="cond-kerja">
           <div class="fields-row-2">
-            <div class="field-group"><label class="field-label" for="f-kerja-tempat">Nama Perusahaan / Instansi</label><input id="f-kerja-tempat" class="field-input" type="text" placeholder="PT. / CV. / Instansi"/></div>
-            <div class="field-group"><label class="field-label" for="f-kerja-jabatan">Posisi / Jabatan</label><input id="f-kerja-jabatan" class="field-input" type="text" placeholder="Staff, Manager, dll."/></div>
+            <div class="field-group"><label class="field-label" for="f-kerja-tempat">Nama Perusahaan / Instansi <span class="req" aria-hidden="true">*</span></label><input id="f-kerja-tempat" class="field-input" type="text" placeholder="PT. / CV. / Instansi" aria-required="true"/><div class="field-error" id="err-kerja-tempat" role="alert">Nama perusahaan/instansi wajib diisi.</div></div>
+            <div class="field-group"><label class="field-label" for="f-kerja-jabatan">Posisi / Jabatan <span class="req" aria-hidden="true">*</span></label><input id="f-kerja-jabatan" class="field-input" type="text" placeholder="Staff, Manager, dll." aria-required="true"/><div class="field-error" id="err-kerja-jabatan" role="alert">Posisi/jabatan wajib diisi.</div></div>
           </div>
         </div>
         <div class="cond-block" id="cond-usaha">
           <div class="fields-row-2">
-            <div class="field-group"><label class="field-label" for="f-usaha-nama">Nama Usaha / Bisnis</label><input id="f-usaha-nama" class="field-input" type="text" placeholder="Nama brand / usaha"/></div>
-            <div class="field-group"><label class="field-label" for="f-usaha-bidang">Bidang Usaha</label><input id="f-usaha-bidang" class="field-input" type="text" placeholder="Kuliner, Fashion, Teknologi, dll."/></div>
+            <div class="field-group"><label class="field-label" for="f-usaha-nama">Nama Usaha / Bisnis <span class="req" aria-hidden="true">*</span></label><input id="f-usaha-nama" class="field-input" type="text" placeholder="Nama brand / usaha" aria-required="true"/><div class="field-error" id="err-usaha-nama" role="alert">Nama usaha wajib diisi.</div></div>
+            <div class="field-group"><label class="field-label" for="f-usaha-bidang">Bidang Usaha <span class="req" aria-hidden="true">*</span></label><input id="f-usaha-bidang" class="field-input" type="text" placeholder="Kuliner, Fashion, Teknologi, dll." aria-required="true"/><div class="field-error" id="err-usaha-bidang" role="alert">Bidang usaha wajib diisi.</div></div>
           </div>
         </div>
         <div class="cond-block" id="cond-kuliah">
           <div class="fields-row-2">
-            <div class="field-group"><label class="field-label" for="f-kuliah-kampus">Nama Perguruan Tinggi</label><input id="f-kuliah-kampus" class="field-input" type="text" placeholder="Universitas / Politeknik / Akademi"/></div>
-            <div class="field-group"><label class="field-label" for="f-kuliah-prodi">Fakultas / Program Studi</label><input id="f-kuliah-prodi" class="field-input" type="text" placeholder="Teknik Informatika, dll."/></div>
+            <div class="field-group"><label class="field-label" for="f-kuliah-kampus">Nama Perguruan Tinggi <span class="req" aria-hidden="true">*</span></label><input id="f-kuliah-kampus" class="field-input" type="text" placeholder="Universitas / Politeknik / Akademi" aria-required="true"/><div class="field-error" id="err-kuliah-kampus" role="alert">Nama perguruan tinggi wajib diisi.</div></div>
+            <div class="field-group"><label class="field-label" for="f-kuliah-prodi">Fakultas / Program Studi <span class="req" aria-hidden="true">*</span></label><input id="f-kuliah-prodi" class="field-input" type="text" placeholder="Teknik Informatika, dll." aria-required="true"/><div class="field-error" id="err-kuliah-prodi" role="alert">Fakultas/program studi wajib diisi.</div></div>
           </div>
         </div>
 
         <div class="form-section-title"><div class="sec-icon">💬</div> Pengalaman &amp; Pesan</div>
         <div class="field-group">
-          <label class="field-label" for="f-pengalaman">Pengalaman &amp; tantangan setelah lulus?</label>
+          <label class="field-label" for="f-pengalaman">Pengalaman &amp; tantangan setelah lulus? <span class="req" aria-hidden="true">*</span></label>
           <div class="char-wrap">
-            <textarea id="f-pengalaman" class="field-textarea" placeholder="Ceritakan pengalamanmu setelah lulus dari SMK CALM..." rows="4" maxlength="500" oninput="updateCharCount(this,'cnt-pengalaman',500)"></textarea>
+            <textarea id="f-pengalaman" class="field-textarea" placeholder="Ceritakan pengalamanmu setelah lulus dari SMK CALM..." rows="4" maxlength="500" required aria-required="true" oninput="updateCharCount(this,'cnt-pengalaman',500)"></textarea>
             <span class="char-count" id="cnt-pengalaman" aria-live="polite">0/500</span>
           </div>
+          <div class="field-error" id="err-pengalaman" role="alert">Cerita pengalaman wajib diisi.</div>
         </div>
         <div class="field-group">
           <label class="field-label" for="f-pesan">Pesan untuk adik kelas <span class="req" aria-hidden="true">*</span></label>
@@ -1283,24 +1284,73 @@ function showToast(msg,isErr=true){
 /* ── VALIDATION ── */
 function validate(){
   let ok=true;
-  const required=[
-    {id:'f-nama',err:'err-nama'},{id:'f-kontak',err:'err-kontak'},{id:'f-domisili',err:'err-domisili'},
-    {id:'f-jurusan',err:'err-jurusan'},{id:'f-tahun',err:'err-tahun'},{id:'f-status',err:'err-status'},{id:'f-pesan',err:'err-pesan'},
+
+  /* Field selalu wajib */
+  const always=[
+    {id:'f-nama',       err:'err-nama',       msg:'Nama lengkap wajib diisi.'},
+    {id:'f-email',      err:'err-email',      msg:'Email wajib diisi dengan format yang valid.'},
+    {id:'f-kontak',     err:'err-kontak',     msg:'Nomor kontak wajib diisi.'},
+    {id:'f-domisili',   err:'err-domisili',   msg:'Domisili wajib diisi.'},
+    {id:'f-medsos',     err:'err-medsos',     msg:'Akun media sosial wajib diisi.'},
+    {id:'f-jurusan',    err:'err-jurusan',    msg:'Jurusan wajib dipilih.'},
+    {id:'f-tahun',      err:'err-tahun',      msg:'Tahun lulus wajib dipilih.'},
+    {id:'f-status',     err:'err-status',     msg:'Aktivitas wajib dipilih.'},
+    {id:'f-pengalaman', err:'err-pengalaman', msg:'Cerita pengalaman wajib diisi.'},
+    {id:'f-pesan',      err:'err-pesan',      msg:'Pesan untuk adik kelas wajib diisi.'},
   ];
-  required.forEach(({id,err})=>{
+
+  always.forEach(({id,err,msg})=>{
     const el=document.getElementById(id);
     const errEl=document.getElementById(err);
-    const val=el?el.value:'';
-    const isEmpty=!val||(el.tagName!=='SELECT'&&!val.trim());
+    if(!el)return;
+    /* Khusus email: cek format juga */
+    let isEmpty;
+    if(id==='f-email'){
+      const v=el.value.trim();
+      isEmpty=!v||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+    } else {
+      const val=el.value;
+      isEmpty=!val||(el.tagName!=='SELECT'&&!val.trim());
+    }
     if(isEmpty){
-      el?.classList.add('error');
-      if(errEl)errEl.classList.add('show');
+      el.classList.add('error');
+      if(errEl){errEl.textContent=msg;errEl.classList.add('show');}
       ok=false;
     } else {
       el.classList.remove('error');
       if(errEl)errEl.classList.remove('show');
     }
   });
+
+  /* Field kondisional — hanya validasi jika section-nya terlihat */
+  const status=document.getElementById('f-status')?.value||'';
+  const condFields={
+    'Bekerja':              [{id:'f-kerja-tempat', err:'err-kerja-tempat', msg:'Nama perusahaan/instansi wajib diisi.'},{id:'f-kerja-jabatan',err:'err-kerja-jabatan',msg:'Posisi/jabatan wajib diisi.'}],
+    'Berwirausaha':         [{id:'f-usaha-nama',   err:'err-usaha-nama',   msg:'Nama usaha wajib diisi.'},{id:'f-usaha-bidang',err:'err-usaha-bidang',msg:'Bidang usaha wajib diisi.'}],
+    'Melanjutkan Pendidikan':[{id:'f-kuliah-kampus',err:'err-kuliah-kampus',msg:'Nama perguruan tinggi wajib diisi.'},{id:'f-kuliah-prodi',err:'err-kuliah-prodi',msg:'Fakultas/program studi wajib diisi.'}],
+  };
+
+  /* Bersihkan semua error kondisional dulu */
+  ['f-kerja-tempat','f-kerja-jabatan','f-usaha-nama','f-usaha-bidang','f-kuliah-kampus','f-kuliah-prodi'].forEach(id=>{
+    const el=document.getElementById(id);
+    const errEl=document.getElementById('err-'+id.replace('f-',''));
+    el?.classList.remove('error');
+    errEl?.classList.remove('show');
+  });
+
+  if(condFields[status]){
+    condFields[status].forEach(({id,err,msg})=>{
+      const el=document.getElementById(id);
+      const errEl=document.getElementById(err);
+      if(!el)return;
+      if(!el.value.trim()){
+        el.classList.add('error');
+        if(errEl){errEl.textContent=msg;errEl.classList.add('show');}
+        ok=false;
+      }
+    });
+  }
+
   return ok;
 }
 
