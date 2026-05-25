@@ -332,6 +332,81 @@ img,svg{display:block}
 .story-location{font-size:11.5px;font-weight:600;color:var(--blue-bright);display:flex;align-items:center;gap:4px}
 .stories-empty{text-align:center;padding:36px;color:var(--text-muted);font-size:14px;background:#fff;border-radius:var(--radius);border:1.5px dashed rgba(30,136,229,.2)}
 
+/* ── REAKSI & KOMENTAR ── */
+.story-footer{
+  padding:10px 16px 0;border-top:1px solid rgba(30,136,229,.08);
+  display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;
+}
+.story-reactions{display:flex;gap:5px;flex-wrap:wrap}
+.reaction-btn{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:4px 10px;border-radius:50px;border:1.5px solid rgba(30,136,229,.15);
+  background:#fff;cursor:pointer;font-size:12px;font-weight:600;color:var(--text-mid);
+  transition:all var(--transition);user-select:none;
+}
+.reaction-btn:hover{border-color:var(--blue-bright);background:var(--blue-pale);transform:scale(1.08)}
+.reaction-btn.active{border-color:var(--blue-bright);background:var(--blue-pale);color:var(--blue-mid)}
+.reaction-btn .r-emoji{font-size:14px;line-height:1}
+.reaction-btn .r-count{font-size:10.5px;font-weight:700;min-width:8px}
+.reaction-btn.pop{animation:popReact .3s cubic-bezier(.34,1.56,.64,1)}
+@keyframes popReact{0%{transform:scale(1)}50%{transform:scale(1.3)}100%{transform:scale(1)}}
+
+.comment-toggle-btn{
+  display:inline-flex;align-items:center;gap:5px;padding:4px 11px;
+  border-radius:50px;border:1.5px solid rgba(30,136,229,.15);background:#fff;
+  cursor:pointer;font-size:11px;font-weight:700;color:var(--text-muted);
+  transition:all var(--transition);white-space:nowrap;
+}
+.comment-toggle-btn:hover{border-color:var(--blue-bright);color:var(--blue-mid);background:var(--blue-pale)}
+
+.story-comments-area{
+  padding:12px 16px 14px;border-top:1px solid rgba(30,136,229,.07);
+  display:none;
+}
+.story-comments-area.open{display:block}
+.comments-list{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;max-height:180px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--sky) transparent}
+.comment-item{
+  display:flex;gap:8px;align-items:flex-start;
+  background:var(--cream);border-radius:10px;padding:8px 11px;
+  animation:fadeInCmt .25s ease;
+}
+@keyframes fadeInCmt{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.comment-avatar{
+  width:26px;height:26px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--blue-mid),var(--blue-bright));
+  display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff;
+}
+.comment-body{flex:1;min-width:0}
+.comment-name{font-size:10.5px;font-weight:700;color:var(--text-dark)}
+.comment-text{font-size:11.5px;color:var(--text-mid);line-height:1.55;margin-top:1px;word-break:break-word}
+.comment-time{font-size:9.5px;color:var(--text-muted);margin-top:2px}
+.no-comments{font-size:11.5px;color:var(--text-muted);text-align:center;padding:8px 0;font-style:italic}
+.comment-form{display:flex;gap:7px;align-items:center}
+.comment-input{
+  flex:1;border:1.5px solid rgba(30,136,229,.18);border-radius:50px;
+  padding:7px 14px;font-size:12px;font-family:'DM Sans',sans-serif;
+  color:var(--text-dark);background:#fff;outline:none;
+  transition:border-color var(--transition),box-shadow var(--transition);
+}
+.comment-input:focus{border-color:var(--blue-bright);box-shadow:0 0 0 3px rgba(30,136,229,.1)}
+.comment-input::placeholder{color:var(--text-muted)}
+.comment-send-btn{
+  width:32px;height:32px;border-radius:50%;border:none;flex-shrink:0;
+  background:linear-gradient(135deg,var(--blue-mid),var(--blue-bright));
+  color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:transform var(--transition),box-shadow var(--transition);
+}
+.comment-send-btn:hover{transform:scale(1.1);box-shadow:0 4px 12px rgba(21,101,192,.4)}
+.comment-send-btn:active{transform:scale(.95)}
+
+/* Mobile story reactions */
+@media(max-width:600px){
+  .story-footer{gap:6px}
+  .story-reactions{gap:4px}
+  .reaction-btn{padding:3px 8px;font-size:11px}
+  .reaction-btn .r-emoji{font-size:13px}
+}
+
 /* ── STORIES PAGINATION ── */
 .stories-nav{
   display:flex;align-items:center;justify-content:center;gap:10px;
@@ -1618,7 +1693,17 @@ function renderStoriesPage(){
     const emoji=getStatusEmoji(s.status);
     const badgeBg=gi%2===0?'var(--blue-pale)':'#f3e5f5';
     const badgeColor=gi%2===0?'var(--blue-mid)':'#7b1fa2';
-    return`<article class="story-card"><div class="story-header" style="background:${grad}"><div class="story-avatar" style="background:rgba(255,255,255,.15)">${initial}</div><div><div class="story-name">${escHtml(s.nama)}</div><div class="story-jurusan">${escHtml(s.jurusan||'Alumni CALM')}${s.tahunLulus?' · Angkatan '+escHtml(String(s.tahunLulus)):''}</div></div></div><div class="story-body"><div class="story-badge" style="background:${badgeBg};color:${badgeColor}">${emoji} ${escHtml(s.status||'Alumni')}</div>${s.detail?`<div style="font-size:11.5px;font-weight:600;color:var(--blue-mid);margin-bottom:7px">🏢 ${escHtml(s.detail)}</div>`:''}<p class="story-quote">"${escHtml(s.pesan)}"</p><div class="story-location">📍 ${escHtml(s.domisili||'Indonesia')}</div></div></article>`;
+    const cardId=buildCardId(s,gi);
+    const reactions=getReactions(cardId);
+    const comments=getComments(cardId);
+    const REACT_LIST=[{e:'👏',l:'Keren'},{e:'❤️',l:'Inspiratif'},{e:'🔥',l:'Semangat'},{e:'🎓',l:'Bangga'},{e:'💪',l:'Salut'}];
+    const reactHTML=REACT_LIST.map(r=>{
+      const cnt=reactions[r.e]||0;
+      const isActive=hasReacted(cardId,r.e);
+      return`<button class="reaction-btn${isActive?' active':''}" onclick="toggleReaction('${cardId}','${r.e}',this)" title="${r.l}" aria-label="${r.l}"><span class="r-emoji">${r.e}</span><span class="r-count">${cnt>0?cnt:''}</span></button>`;
+    }).join('');
+    const cntLabel=comments.length>0?`💬 ${comments.length}`:' 💬';
+    return`<article class="story-card"><div class="story-header" style="background:${grad}"><div class="story-avatar" style="background:rgba(255,255,255,.15)">${initial}</div><div><div class="story-name">${escHtml(s.nama)}</div><div class="story-jurusan">${escHtml(s.jurusan||'Alumni CALM')}${s.tahunLulus?' · Angkatan '+escHtml(String(s.tahunLulus)):''}</div></div></div><div class="story-body"><div class="story-badge" style="background:${badgeBg};color:${badgeColor}">${emoji} ${escHtml(s.status||'Alumni')}</div>${s.detail?`<div style="font-size:11.5px;font-weight:600;color:var(--blue-mid);margin-bottom:7px">🏢 ${escHtml(s.detail)}</div>`:''}<p class="story-quote">"${escHtml(s.pesan)}"</p><div class="story-location">📍 ${escHtml(s.domisili||'Indonesia')}</div></div><div class="story-footer"><div class="story-reactions">${reactHTML}</div><button class="comment-toggle-btn" onclick="toggleComments('${cardId}',this)">${cntLabel}</button></div><div class="story-comments-area" id="cmt-${cardId}">${buildCommentsHTML(cardId)}</div></article>`;
   }).join('');
   /* nav update */
   if(nav){
@@ -1660,6 +1745,110 @@ function updateStories(stories){
 }
 
 function escHtml(str){if(!str)return'';return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+/* ── REACTION & COMMENT SYSTEM ── */
+function buildCardId(s,gi){
+  const name=(s.nama||'alumni').replace(/\s+/g,'_').toLowerCase().replace(/[^a-z0-9_]/g,'');
+  return'card_'+name+'_'+gi;
+}
+
+function getReactions(cardId){
+  try{return JSON.parse(localStorage.getItem('react_'+cardId)||'{}');}catch{return{};}
+}
+function saveReactions(cardId,obj){
+  try{localStorage.setItem('react_'+cardId,JSON.stringify(obj));}catch{}
+}
+function getUserReacted(cardId){
+  try{return JSON.parse(localStorage.getItem('reacted_'+cardId)||'[]');}catch{return[];}
+}
+function saveUserReacted(cardId,arr){
+  try{localStorage.setItem('reacted_'+cardId,JSON.stringify(arr));}catch{}
+}
+function hasReacted(cardId,emoji){
+  return getUserReacted(cardId).includes(emoji);
+}
+
+function toggleReaction(cardId,emoji,btn){
+  const reactions=getReactions(cardId);
+  const reacted=getUserReacted(cardId);
+  const idx=reacted.indexOf(emoji);
+  if(idx>=0){
+    reacted.splice(idx,1);
+    reactions[emoji]=Math.max(0,(reactions[emoji]||0)-1);
+    btn.classList.remove('active');
+  }else{
+    reacted.push(emoji);
+    reactions[emoji]=(reactions[emoji]||0)+1;
+    btn.classList.add('active');
+    btn.classList.add('pop');
+    setTimeout(()=>btn.classList.remove('pop'),320);
+  }
+  saveReactions(cardId,reactions);
+  saveUserReacted(cardId,reacted);
+  const countEl=btn.querySelector('.r-count');
+  if(countEl)countEl.textContent=reactions[emoji]>0?reactions[emoji]:'';
+}
+
+function getComments(cardId){
+  try{return JSON.parse(localStorage.getItem('cmts_'+cardId)||'[]');}catch{return[];}
+}
+function saveComments(cardId,arr){
+  try{localStorage.setItem('cmts_'+cardId,JSON.stringify(arr));}catch{}
+}
+
+function buildCommentsHTML(cardId){
+  const cmts=getComments(cardId);
+  const list=cmts.length===0
+    ?'<div class="no-comments">Belum ada komentar. Jadilah yang pertama!</div>'
+    :cmts.map(c=>{
+        const av=(c.name||'?').split(' ').filter(Boolean).map(w=>w[0]).join('').toUpperCase().slice(0,2);
+        return`<div class="comment-item"><div class="comment-avatar">${escHtml(av)}</div><div class="comment-body"><div class="comment-name">${escHtml(c.name)}</div><div class="comment-text">${escHtml(c.text)}</div><div class="comment-time">${escHtml(c.time)}</div></div></div>`;
+      }).join('');
+  return`<div class="comments-list" id="clist-${cardId}">${list}</div><div class="comment-form"><input class="comment-input" id="cinput-${cardId}" type="text" placeholder="Tulis komentar..." maxlength="200" onkeydown="if(event.key==='Enter')sendComment('${cardId}')"/><button class="comment-send-btn" onclick="sendComment('${cardId}')" title="Kirim">➤</button></div>`;
+}
+
+function toggleComments(cardId,btn){
+  const area=document.getElementById('cmt-'+cardId);
+  if(!area)return;
+  const isOpen=area.classList.toggle('open');
+  const cmts=getComments(cardId);
+  if(isOpen){
+    btn.textContent='✕ Tutup';
+    const inp=document.getElementById('cinput-'+cardId);
+    if(inp)setTimeout(()=>inp.focus(),120);
+  }else{
+    btn.textContent=cmts.length>0?`💬 ${cmts.length}`:' 💬';
+  }
+}
+
+function sendComment(cardId){
+  const inp=document.getElementById('cinput-'+cardId);
+  if(!inp)return;
+  const raw=inp.value.trim();
+  if(!raw)return;
+  const cmts=getComments(cardId);
+  const now=new Date();
+  const timeStr=now.toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'})+' '+now.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
+  cmts.push({name:'Kamu',text:raw,time:timeStr});
+  saveComments(cardId,cmts);
+  inp.value='';
+  const listEl=document.getElementById('clist-'+cardId);
+  if(listEl){
+    listEl.innerHTML=cmts.map(c=>{
+      const av=(c.name||'?').split(' ').filter(Boolean).map(w=>w[0]).join('').toUpperCase().slice(0,2);
+      return`<div class="comment-item"><div class="comment-avatar">${escHtml(av)}</div><div class="comment-body"><div class="comment-name">${escHtml(c.name)}</div><div class="comment-text">${escHtml(c.text)}</div><div class="comment-time">${escHtml(c.time)}</div></div></div>`;
+    }).join('');
+    listEl.scrollTop=listEl.scrollHeight;
+  }
+  /* update toggle button label */
+  const toggleBtns=document.querySelectorAll(`button.comment-toggle-btn`);
+  toggleBtns.forEach(b=>{
+    if(b.onclick&&b.onclick.toString().includes(cardId)){
+      b.textContent=`💬 ${cmts.length}`;
+    }
+  });
+  showToast('Komentar terkirim! 💬',false);
+}
 
 /* ── AUTO REFRESH — pause saat tab hidden ── */
 let refreshTimer=setInterval(()=>loadAlumniData(false),10*60*1000);
