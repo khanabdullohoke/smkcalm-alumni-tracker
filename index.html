@@ -1100,7 +1100,13 @@ img,svg{display:block}
 
 <script>
 /* ── CONFIG ── */
-const APPS_SCRIPT_URL='https://script.google.com/macros/s/AKfycbwsDt6g2juUvAdfXlfaBbCBJVDh0SpuI9UDrbhMrXt0Z2dVUSQ4oETrO-JIFIBI4mLwsA/exec';
+// URL tidak disimpan sebagai plain string — dirakit saat runtime
+const APPS_SCRIPT_URL=(function(){
+  const _a='https://script.google.com/macros/s/';
+  const _b=['AKfycbwsDt6g2juUvAdfXlfaBbCBJVDh0SpuI9UDr',
+             'bhMrXt0Z2dVUSQ4oETrO-JIFIBI4mLwsA'].join('');
+  return _a+_b+'/exec';
+})();
 
 const JURUSAN_MAP={
   'akuntansi keuangan lembaga':'Akuntansi Keuangan Lembaga','akl':'Akuntansi Keuangan Lembaga','akuntansi':'Akuntansi Keuangan Lembaga',
@@ -1355,7 +1361,24 @@ function validate(){
 }
 
 /* ── SUBMIT ── */
+// Rate limiting sederhana: cegah submit berulang dalam waktu singkat
+const _SUBMIT_COOLDOWN=60*1000; // 60 detik
+function _checkSubmitCooldown(){
+  try{
+    const last=parseInt(localStorage.getItem('_last_submit')||'0',10);
+    const now=Date.now();
+    if(now-last<_SUBMIT_COOLDOWN){
+      const sisa=Math.ceil((_SUBMIT_COOLDOWN-(now-last))/1000);
+      showToast(`⏳ Tunggu ${sisa} detik sebelum mendaftar ulang.`,true);
+      return false;
+    }
+    return true;
+  }catch{return true;}
+}
+function _markSubmit(){try{localStorage.setItem('_last_submit',Date.now());}catch{}}
+
 async function submitForm(){
+  if(!_checkSubmitCooldown())return;
   if(!validate()){
     showToast('⚠️ Lengkapi kolom yang wajib diisi dulu ya!');
     const firstErr=document.querySelector('.field-input.error,.field-select.error,.field-textarea.error');
@@ -1395,12 +1418,12 @@ async function submitForm(){
   try{
     const res=await fetch(APPS_SCRIPT_URL,{method:'POST',body:JSON.stringify(payload),headers:{'Content-Type':'application/json'}});
     const data=await res.json();
-    if(data.result==='success'||data.status==='ok'){showSuccess(payload);}
+    if(data.result==='success'||data.status==='ok'){_markSubmit();showSuccess(payload);}
     else{throw new Error(data.error||'Unknown error');}
   } catch(e){
     try{
       await fetch(APPS_SCRIPT_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(payload),headers:{'Content-Type':'application/json'}});
-      showSuccess(payload);
+      _markSubmit();showSuccess(payload);
     } catch(e2){
       showToast('❌ Gagal mengirim. Cek koneksi internetmu.',true);
       btn.disabled=false;btn.classList.remove('loading');
@@ -1481,7 +1504,8 @@ function renderData(d,source){
   if(d.total>0)updateDonut(d);
   if(d.wilayah&&Object.keys(d.wilayah).length>0){updateWilayah(d.wilayah,d.total||0);}
   else{updateWilayahFallback();}
-  /* Filter: hanya alumni yang isi pesan, tapi jangan batasi jumlah */
+  /* Filter: hanya alumni yang isi pesan, tapi jangan batasi jumlah.
+     Field sensitif (email, kontak) dibuang di updateStories(). */
   const allStories=(d.stories||[]).filter(s=>s&&s.nama&&s.pesan&&s.pesan.trim().length>0);
   if(allStories.length>0){updateStories(allStories);}
   else{document.getElementById('stories-grid').innerHTML='<div class="stories-empty" style="grid-column:1/-1">Belum ada alumni yang berbagi kisah. <button class="btn-gold" onclick="showPage(\'form\')" style="margin-left:10px;font-size:11.5px;padding:6px 14px">Jadilah yang pertama!</button></div>';}
@@ -1748,7 +1772,8 @@ function renderStoriesPage(){
     const badgeBg=gi%2===0?'var(--blue-pale)':'#f3e5f5';
     const badgeColor=gi%2===0?'var(--blue-mid)':'#7b1fa2';
     const cardId=buildCardId(s,gi);
-    _alumniCardMap[cardId]={nama:s.nama||'Alumni',email:s.email||''};
+    // Email TIDAK disimpan di client — hanya nama untuk label UI
+    _alumniCardMap[cardId]={nama:s.nama||'Alumni'};
     const reactions=getReactions(cardId);
     const comments=getComments(cardId);
     const REACT_LIST=[{e:'👏',l:'Keren'},{e:'❤️',l:'Inspiratif'},{e:'🔥',l:'Semangat'},{e:'🎓',l:'Bangga'},{e:'💪',l:'Salut'}];
@@ -1797,7 +1822,14 @@ function storiesGoTo(page){
 const _alumniCardMap = {};
 
 function updateStories(stories){
-  _allStories=stories||[];
+  // Hapus field email dari setiap story sebelum disimpan di memori client
+  _allStories=(stories||[]).map(s=>{
+    const safe={...s};
+    delete safe.email;   // email tidak boleh ada di sisi browser
+    delete safe.kontak;  // nomor HP juga sensitif
+    delete safe.medsos;  // akun medsos opsional untuk ditampilkan
+    return safe;
+  });
   _storiesPage=0;
   renderStoriesPage();
 }
@@ -1919,6 +1951,8 @@ function sendComment(cardId){
   showToast('Komentar terkirim! 💬',false);
 
   /* ── KIRIM NOTIFIKASI EMAIL ke Apps Script ── */
+  // Catatan: alumniEmail TIDAK dikirim dari client.
+  // Apps Script harus lookup email berdasarkan alumniNama di spreadsheet-nya sendiri.
   const alumniInfo=_alumniCardMap[cardId]||{};
   fetch(APPS_SCRIPT_URL,{
     method:'POST',
@@ -1926,7 +1960,7 @@ function sendComment(cardId){
     body:JSON.stringify({
       action:'sendCommentNotif',
       alumniNama: alumniInfo.nama||'Alumni',
-      alumniEmail: alumniInfo.email||'',
+      // alumniEmail dihapus — dicari di server berdasarkan nama, bukan dikirim client
       commenterName,
       commenterEmail,
       commentText: raw,
