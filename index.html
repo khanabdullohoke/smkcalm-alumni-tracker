@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src https://script.google.com https://fonts.googleapis.com; img-src 'self' data:; frame-ancestors 'none'"/>
+<meta name="referrer" content="strict-origin-when-cross-origin"/>
 <title>Alumni Tracker — SMK Ciledug Al-Musaddadiyah</title>
 <meta name="description" content="Pantau jejak alumni SMK CALM Garut dan daftarkan dirimu sebagai alumni."/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
@@ -667,7 +669,7 @@ img,svg{display:block}
 <!-- NAV -->
 <nav id="alumni-nav">
   <div class="nav-inner">
-    <a class="nav-brand" onclick="showPage('dashboard');return false" href="#beranda" role="button" aria-label="Alumni Tracker Beranda">
+    <a class="nav-brand" data-page="dashboard" href="#beranda" role="button" aria-label="Alumni Tracker Beranda">
       <div class="nav-brand-icon">🎓</div>
       <div class="nav-brand-text">
         <span>Alumni Tracker</span>
@@ -675,11 +677,11 @@ img,svg{display:block}
       </div>
     </a>
     <div class="nav-links" role="navigation" aria-label="Menu utama">
-      <button class="nav-link active" id="nav-dashboard" onclick="showPage('dashboard')">📊 Dashboard</button>
-      <button class="nav-link" id="nav-form" onclick="showPage('form')">📋 Daftar Alumni</button>
+      <button class="nav-link active" id="nav-dashboard" data-page="dashboard">📊 Dashboard</button>
+      <button class="nav-link" id="nav-form" data-page="form">📋 Daftar Alumni</button>
     </div>
     <div class="nav-right">
-      <button class="btn-gold" onclick="showPage('form')">+ Daftar Sekarang</button>
+      <button class="btn-gold" data-page="form">+ Daftar Sekarang</button>
     </div>
   </div>
 </nav>
@@ -687,14 +689,14 @@ img,svg{display:block}
 <!-- MOBILE BOTTOM NAV -->
 <div class="mobile-nav-bar" role="navigation" aria-label="Menu mobile">
   <div class="mobile-nav-inner">
-    <button class="mobile-nav-btn active" id="mnav-dashboard" onclick="showPage('dashboard')">
+    <button class="mobile-nav-btn active" id="mnav-dashboard" data-page="dashboard">
       <div class="mn-icon">📊</div>
       <div class="mn-label">Dashboard</div>
     </button>
-    <button class="mobile-nav-btn primary" id="mnav-form" onclick="showPage('form')">
+    <button class="mobile-nav-btn primary" id="mnav-form" data-page="form">
       <div class="mn-icon-wrap"><span>+</span><span>Daftar</span></div>
     </button>
-    <button class="mobile-nav-btn" id="mnav-info" onclick="showPage('dashboard');setTimeout(()=>document.getElementById('infografis')?.scrollIntoView({behavior:'smooth'}),120)">
+    <button class="mobile-nav-btn" id="mnav-info" data-page="dashboard" data-scroll="infografis">
       <div class="mn-icon">📈</div>
       <div class="mn-label">Infografis</div>
     </button>
@@ -712,7 +714,7 @@ img,svg{display:block}
         <h1>Bangga Jadi <em>Alumni CALM</em> —<br>Cerita Kalian, Inspirasi Kami</h1>
         <p>Pantau jejak sukses alumni SMK Ciledug Al-Musaddadiyah di seluruh Indonesia. Data real-time, infografis interaktif, dan koneksi alumni terpercaya.</p>
         <div class="hero-btns">
-          <button class="btn-gold" onclick="showPage('form')">
+          <button class="btn-gold" data-page="form">
             <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M8 2v12M2 8h12"/></svg>
             Daftarkan Diri
           </button>
@@ -745,9 +747,9 @@ img,svg{display:block}
       <div class="section-header">
         <div class="section-label">Data Alumni</div>
         <h2 class="section-title">Infografis <em>Alumni SMK CALM</em></h2>
-        <p class="section-sub">Visualisasi data alumni real-time dari Google Sheets. <span id="data-timestamp" style="font-weight:600;color:var(--blue-mid)">Memuat data...</span></p>
+        <p class="section-sub">Visualisasi data alumni real-time dari Database SMK Ciledug Al-Musaddadiyah. <span id="data-timestamp" style="font-weight:600;color:var(--blue-mid)">Memuat data...</span></p>
         <div id="data-status-badge" class="data-status" style="display:none" role="status" aria-live="polite"></div>
-        <button class="refresh-btn" onclick="loadAlumniData(true)" id="refresh-btn" aria-label="Perbarui data">
+        <button class="refresh-btn" data-action="refresh" id="refresh-btn" aria-label="Perbarui data">
           <span class="refresh-icon" id="refresh-icon">🔄</span> Perbarui Data
         </button>
       </div>
@@ -852,7 +854,7 @@ img,svg{display:block}
         <div class="tl-item"><div class="tl-dot"></div><div class="tl-card"><div class="tl-year">📅 2005 — Milestone 1.000 Alumni</div><div class="tl-title">Seribu Lulusan, Seribu Mimpi</div><div class="tl-desc">Alumni ke-1000 diwisuda. Beberapa alumni awal telah mendirikan UMKM dan merekrut adik-adik alumninya sendiri.</div></div></div>
         <div class="tl-item"><div class="tl-dot"></div><div class="tl-card"><div class="tl-year">📅 2015 — Ekspansi Nasional</div><div class="tl-title">Alumni Tersebar ke Seluruh Nusantara</div><div class="tl-desc">Alumni CALM mulai masuk BUMN, TNI/Polri, dan perusahaan nasional. Program magang ke Jepang dan Korea pertama kali dibuka.</div></div></div>
         <div class="tl-item"><div class="tl-dot"></div><div class="tl-card"><div class="tl-year">📅 2021 — Beasiswa Internasional</div><div class="tl-title">Alumni Raih Beasiswa Pukyong National University</div><div class="tl-desc">Pertama kali alumni CALM berhasil meraih beasiswa S1 di Korea Selatan — membuktikan kualitas lulusan kami di kancah internasional.</div></div></div>
-        <div class="tl-item"><div class="tl-dot" style="background:var(--gold);box-shadow:0 0 0 5px rgba(255,179,0,.18)"></div><div class="tl-card"><div class="tl-year">📅 2025 — Alumni Tracker Diluncurkan</div><div class="tl-title">Jejak Digital Alumni CALM Kini Terpantau</div><div class="tl-desc">Peluncuran platform Alumni Tracker untuk menghubungkan dan memantau perkembangan alumni secara real-time via Google Sheets.</div></div></div>
+        <div class="tl-item"><div class="tl-dot" style="background:var(--gold);box-shadow:0 0 0 5px rgba(255,179,0,.18)"></div><div class="tl-card"><div class="tl-year">📅 2025 — Alumni Tracker Diluncurkan</div><div class="tl-title">Jejak Digital Alumni CALM Kini Terpantau</div><div class="tl-desc">Peluncuran platform Alumni Tracker untuk menghubungkan dan memantau perkembangan alumni secara real-time melalui Platform Alumni Tracker SMK Ciledug Al-Musaddadiyah.</div></div></div>
       </div>
     </div>
   </section>
@@ -871,12 +873,12 @@ img,svg{display:block}
         </div>
       </div>
       <div class="stories-nav" id="stories-nav" style="display:none">
-        <button class="stories-nav-btn" id="stories-prev" onclick="storiesPage(-1)" aria-label="Alumni sebelumnya" title="Sebelumnya">&#8592;</button>
+        <button class="stories-nav-btn" id="stories-prev" data-action="stories-prev" aria-label="Alumni sebelumnya" title="Sebelumnya">&#8592;</button>
         <div class="stories-nav-center">
           <div class="stories-nav-dots" id="stories-dots"></div>
           <span class="stories-page-info" id="stories-page-info"></span>
         </div>
-        <button class="stories-nav-btn" id="stories-next" onclick="storiesPage(1)" aria-label="Alumni berikutnya" title="Berikutnya">&#8594;</button>
+        <button class="stories-nav-btn" id="stories-next" data-action="stories-next" aria-label="Alumni berikutnya" title="Berikutnya">&#8594;</button>
       </div>
     </div>
   </section>
@@ -888,7 +890,7 @@ img,svg{display:block}
       <h2>Kamu Alumni CALM? Daftarkan Dirimu!</h2>
       <p>Jadilah bagian dari komunitas alumni terbesar SMK Ciledug Al-Musaddadiyah. Satu formulir, seribu koneksi.</p>
       <div class="cta-btns">
-        <button class="btn-gold-lg" onclick="showPage('form')">📋 Isi Formulir Sekarang</button>
+        <button class="btn-gold-lg" data-page="form">📋 Isi Formulir Sekarang</button>
         <a href="https://www.smkciledugalmusaddadiyah.sch.id" class="btn-ghost" target="_blank" rel="noopener noreferrer">🏫 Website Sekolah</a>
       </div>
     </div>
@@ -928,7 +930,7 @@ img,svg{display:block}
       </div>
       <div class="sidebar-card" style="background:var(--blue-deep);border-color:transparent">
         <div style="font-size:11px;font-weight:800;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.08em;margin-bottom:9px">🔒 Privasi Data</div>
-        <p style="font-size:11.5px;color:rgba(255,255,255,.55);line-height:1.75">Data yang kamu isi disimpan di Google Sheets sekolah dan hanya digunakan untuk keperluan alumni tracking SMK CALM. Tidak akan dibagikan ke pihak luar.</p>
+        <p style="font-size:11.5px;color:rgba(255,255,255,.55);line-height:1.75">Data yang kamu isi tersimpan di database resmi SMK Ciledug Al-Musaddadiyah dan hanya digunakan untuk keperluan alumni tracking SMK CALM. Tidak akan dibagikan ke pihak luar.</p>
       </div>
     </aside>
 
@@ -1000,7 +1002,7 @@ img,svg{display:block}
         <div class="form-section-title"><div class="sec-icon">💼</div> Aktivitas Saat Ini</div>
         <div class="field-group">
           <label class="field-label" for="f-status">Aktivitas utama kamu saat ini? <span class="req" aria-hidden="true">*</span></label>
-          <select id="f-status" class="field-select" required aria-required="true" onchange="handleStatusChange()">
+          <select id="f-status" class="field-select" required aria-required="true" data-action="status-change">
             <option value="">Pilih aktivitas...</option>
             <option value="Bekerja">💼 Bekerja (karyawan / pegawai)</option>
             <option value="Berwirausaha">🚀 Berwirausaha / usaha mandiri</option>
@@ -1034,7 +1036,7 @@ img,svg{display:block}
         <div class="field-group">
           <label class="field-label" for="f-pengalaman">Pengalaman &amp; tantangan setelah lulus? <span class="req" aria-hidden="true">*</span></label>
           <div class="char-wrap">
-            <textarea id="f-pengalaman" class="field-textarea" placeholder="Ceritakan pengalamanmu setelah lulus dari SMK CALM..." rows="4" maxlength="500" required aria-required="true" oninput="updateCharCount(this,'cnt-pengalaman',500)"></textarea>
+            <textarea id="f-pengalaman" class="field-textarea" placeholder="Ceritakan pengalamanmu setelah lulus dari SMK CALM..." rows="4" maxlength="500" required aria-required="true" data-counter="cnt-pengalaman" data-max="500"></textarea>
             <span class="char-count" id="cnt-pengalaman" aria-live="polite">0/500</span>
           </div>
           <div class="field-error" id="err-pengalaman" role="alert">Cerita pengalaman wajib diisi.</div>
@@ -1042,19 +1044,19 @@ img,svg{display:block}
         <div class="field-group">
           <label class="field-label" for="f-pesan">Pesan untuk adik kelas <span class="req" aria-hidden="true">*</span></label>
           <div class="char-wrap">
-            <textarea id="f-pesan" class="field-textarea" placeholder="Tuliskan pesan inspiratif untuk adik-adik yang masih di SMK CALM..." rows="4" maxlength="500" required aria-required="true" oninput="updateCharCount(this,'cnt-pesan',500)"></textarea>
+            <textarea id="f-pesan" class="field-textarea" placeholder="Tuliskan pesan inspiratif untuk adik-adik yang masih di SMK CALM..." rows="4" maxlength="500" required aria-required="true" data-counter="cnt-pesan" data-max="500"></textarea>
             <span class="char-count" id="cnt-pesan" aria-live="polite">0/500</span>
           </div>
           <div class="field-error" id="err-pesan" role="alert">Pesan untuk adik kelas wajib diisi.</div>
         </div>
 
-        <button class="btn-submit" id="btn-submit" onclick="submitForm()">
+        <button class="btn-submit" id="btn-submit" data-action="submit">
           <div class="spinner" aria-hidden="true"></div>
           <span class="btn-text">🚀 Daftarkan Diri Sekarang</span>
         </button>
         <div class="submit-info">
           <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="var(--blue-bright)" stroke-width="2" stroke-linecap="round" style="flex-shrink:0;margin-top:1px" aria-hidden="true"><circle cx="8" cy="8" r="6"/><path d="M8 7v4M8 5.5v.5"/></svg>
-          <span>Data tersimpan langsung ke Google Sheets SMK CALM. Kolom <strong style="color:var(--red)">*</strong> wajib diisi.</span>
+          <span>Data tersimpan langsung ke Database Alumni SMK Ciledug Al-Musaddadiyah. Kolom <strong style="color:var(--red)">*</strong> wajib diisi.</span>
         </div>
       </div>
     </main>
@@ -1066,8 +1068,8 @@ img,svg{display:block}
 <footer id="alumni-footer">
   <p>© 2025 <strong style="color:rgba(255,255,255,.45)">SMK Ciledug Al-Musaddadiyah</strong> — Alumni Tracker v2.3</p>
   <p>
-    <a onclick="showPage('dashboard')">Dashboard Alumni</a> ·
-    <a onclick="showPage('form')">Form Pendaftaran</a> ·
+    <a data-page="dashboard">Dashboard Alumni</a> ·
+    <a data-page="form">Form Pendaftaran</a> ·
     <a href="https://www.smkciledugalmusaddadiyah.sch.id" target="_blank" rel="noopener noreferrer">Website Utama</a> ·
     <a href="https://www.instagram.com/smkscalm_official/" target="_blank" rel="noopener noreferrer">Instagram</a>
   </p>
@@ -1088,8 +1090,8 @@ img,svg{display:block}
       <div class="success-row"><span class="key">Domisili</span><span class="val" id="s-domisili">–</span></div>
     </div>
     <div class="success-actions">
-      <button class="btn-back-home" onclick="closeSuccess()">📊 Lihat Dashboard</button>
-      <button class="btn-share" onclick="shareWhatsApp()">📤 Bagikan ke WA</button>
+      <button class="btn-back-home" data-action="close-success">📊 Lihat Dashboard</button>
+      <button class="btn-share" data-action="share-wa">📤 Bagikan ke WA</button>
     </div>
     <p style="margin-top:16px;font-size:11.5px;color:rgba(255,255,255,.35)">Data kamu akan tampil di infografis setelah diverifikasi.</p>
   </div>
@@ -1102,10 +1104,13 @@ img,svg{display:block}
 /* ── CONFIG ── */
 // URL tidak disimpan sebagai plain string — dirakit saat runtime
 const APPS_SCRIPT_URL=(function(){
-  const _a='https://script.google.com/macros/s/';
-  const _b=['AKfycbwsDt6g2juUvAdfXlfaBbCBJVDh0SpuI9UDr',
-             'bhMrXt0Z2dVUSQ4oETrO-JIFIBI4mLwsA'].join('');
-  return _a+_b+'/exec';
+  // URL dirakit di runtime dari segmen terpisah — tidak tersimpan utuh di source
+  const _s=[112,116,116,112,115,58,47,47,115,99,114,105,112,116,46,103,111,111,103,108,101,46,99,111,109,47,109,97,99,114,111,115,47,115,47];
+  const _p=String.fromCharCode(..._s);
+  const _c=[65,75,102,121,99,98,119,115,68,116,54,103,50,106,117,85,118,65,100,102,88,108,102,97,66,98,67,66,74,86,104,48,83,112,117,73,57,85,68,114];
+  const _d=[98,104,77,114,88,116,48,90,50,100,86,85,83,81,52,111,69,84,114,79,45,74,73,70,73,66,73,52,109,76,119,115,65];
+  const _e='/exec';
+  return _p+String.fromCharCode(..._c)+String.fromCharCode(..._d)+_e;
 })();
 
 const JURUSAN_MAP={
@@ -1385,6 +1390,21 @@ async function submitForm(){
     if(firstErr)firstErr.scrollIntoView({behavior:'smooth',block:'center'});
     return;
   }
+  /* ── Filter konten tidak sopan di form ── */
+  const _checkFields=[
+    {id:'f-nama',      label:'Nama'},
+    {id:'f-pengalaman',label:'Pengalaman'},
+    {id:'f-pesan',     label:'Pesan untuk adik kelas'},
+  ];
+  for(const {id,label} of _checkFields){
+    const val=(document.getElementById(id)?.value||'').trim();
+    if(_containsBannedWord(val)){
+      showToast('⚠️ Kolom "'+label+'" mengandung kata yang tidak sopan.',true);
+      document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'center'});
+      document.getElementById(id)?.focus();
+      return;
+    }
+  }
   const btn=document.getElementById('btn-submit');
   btn.disabled=true;btn.classList.add('loading');
   const status=document.getElementById('f-status').value;
@@ -1513,7 +1533,7 @@ function renderData(d,source){
   const badge=document.getElementById('data-status-badge');
   if(source==='live'){
     if(ts&&d.lastUpdated)ts.textContent='Data per '+d.lastUpdated;
-    if(badge){badge.style.display='inline-flex';badge.className='data-status live';badge.textContent='Data Live dari Google Sheets';}
+    if(badge){badge.style.display='inline-flex';badge.className='data-status live';badge.textContent='Data Live — Database SMK Ciledug Al-Musaddadiyah';}
   } else if(source==='cache'){
     if(ts)ts.textContent='Data dari cache lokal';
     if(badge){badge.style.display='inline-flex';badge.className='data-status live';badge.textContent='Cache — memperbarui...';}
@@ -1886,6 +1906,21 @@ function saveComments(cardId,arr){
   try{localStorage.setItem('cmts_'+cardId,JSON.stringify(arr));}catch{}
 }
 
+/* ── RATE LIMIT KOMENTAR — 30 detik per kartu ── */
+const _CMT_COOLDOWN=30*1000;
+function _canComment(cardId){
+  try{
+    const last=parseInt(localStorage.getItem('_cmt_ts_'+cardId)||'0',10);
+    if(Date.now()-last<_CMT_COOLDOWN){
+      const sisa=Math.ceil((_CMT_COOLDOWN-(Date.now()-last))/1000);
+      showToast('⏳ Tunggu '+sisa+' detik sebelum komentar lagi.',true);
+      return false;
+    }
+    return true;
+  }catch{return true;}
+}
+function _markComment(cardId){try{localStorage.setItem('_cmt_ts_'+cardId,Date.now());}catch{}}
+
 function buildCommentsHTML(cardId){
   const cmts=getComments(cardId);
   const list=cmts.length===0
@@ -1921,6 +1956,159 @@ function toggleComments(cardId,btn){
   }
 }
 
+
+/* ══════════════════════════════════════════════════════════
+   CONTENT FILTER — Sensor kata tidak sopan / vulgar / kasar
+   Berlaku untuk: komentar, nama, pesan form, pengalaman form
+   ══════════════════════════════════════════════════════════ */
+(function(){
+
+  /* ── Daftar kata terlarang (root kata — regex dibangun otomatis) ── */
+  const _BANNED=[
+    /* Umpatan umum Bahasa Indonesia */
+    'anjing','anjg','anying','anjrit','anjir','anjer',
+    'bangsat','bgs','bgsat',
+    'babi','b4bi',
+    'bajingan','bajing4n',
+    'bedebah',
+    'brengsek','br3ngsek',
+    'celaka',
+    'goblok','g0blok','g0bl0k',
+    'tolol','t0lol',
+    'idiot','idi0t',
+    'bodoh','b0d0h',
+    'dungu',
+    'kampret','k4mpret',
+    'keparat','k3parat',
+    'kurang ajar','kurangajar',
+    'setan','s3tan',
+    'iblis',
+    'sialan','si4lan',
+    'tai','t4i',
+    'tahi',
+    'kentut',
+    'berak','b3rak',
+    'edan','3dan',
+    'geblek',
+    'asu','a5u',
+    'cuk','c0k',
+    'jancok','jancuk','j4ncok','j4ncuk',
+    'dancok','dancuk',
+    'ndasmu',
+    'matamu','mat4mu',
+    'modar',
+    'mampus','m4mpus',
+    'semprul',
+    'rase','r4se',
+    'bejat','b3jat',
+    'haram','har4m',
+    'laknat','l4knat',
+    'terkutuk',
+    'jahanam','j4hanam',
+    /* Kata vulgar / seksual */
+    'kontol','k0ntol','k0nt0l',
+    'memek','m3m3k','m3mek',
+    'pepek','p3p3k',
+    'titit','t1t1t',
+    'ngentot','ng3ntot','ng3nt0t',
+    'ngentod',
+    'entot','3ntot',
+    'ngebo','ng3bo',
+    'ngewe','ng3we',
+    'jembut','j3mbut',
+    'peler','p3l3r',
+    'pantat','p4ntat',
+    'bokong',
+    'colmek','c0lmek',
+    'coli','c0li',
+    'masturbasi',
+    'pelacur','p3lacur',
+    'lonte','l0nte',
+    'sundal','sund4l',
+    'jablay','j4blay',
+    'bejingan',
+    'mucikari',
+    'gigolo','gig0lo',
+    'prostitusi',
+    'porno','p0rno',
+    'bugil','bug1l',
+    'telanjang','t3lanjang',
+    /* Kata diskriminatif / SARA */
+    'kafir','k4fir',
+    'pribumi',
+    'cina','c1na',
+    'keling','k3ling',
+    'negro','n3gro',
+    'monyet','m0nyet',
+    'kera',
+    'banci','b4nci',
+    'homo','h0m0',
+    'bencong','b3ncong',
+    'waria',
+    /* Kata ancaman */
+    'bunuh','bunuhin',
+    'bacok','b4cok',
+    'tikam',
+    'tusuk',
+    'hajar',
+    'gebuk',
+    'bogem',
+  ];
+
+  /* ── Normalizer: hapus spasi/simbol/leet antar huruf ── */
+  function _normalize(str){
+    return str
+      .toLowerCase()
+      .replace(/[^a-z0-9]/gi,' ')   // non-alfanum jadi spasi
+      .replace(/0/g,'o')
+      .replace(/1/g,'i')
+      .replace(/3/g,'e')
+      .replace(/4/g,'a')
+      .replace(/5/g,'s')
+      .replace(/8/g,'b')
+      .replace(/\s+/g,' ')
+      .trim();
+  }
+
+  /* ── Bangun regex dari daftar ── */
+  function _buildPattern(){
+    const escaped=_BANNED.map(w=>{
+      const n=_normalize(w);
+      // izinkan 0-1 spasi/simbol di antara setiap huruf (bypass: a n j i n g)
+      return n.split('').map(c=>c==='i'?'[i1]':c==='o'?'[o0]':c==='e'?'[e3]':c==='a'?'[a4@]':c==='s'?'[s5]':c==='b'?'[b8]':c).join('[^a-z0-9]?');
+    });
+    return new RegExp('(?:^|\\b|\\s)('+escaped.join('|')+')(?:\\b|\\s|$)','gi');
+  }
+
+  const _RE=_buildPattern();
+
+  /* ── Fungsi utama: cek teks ── */
+  window._containsBannedWord=function(text){
+    if(!text)return false;
+    const norm=_normalize(text);
+    _RE.lastIndex=0;
+    return _RE.test(norm);
+  };
+
+  /* ── Sensor: ganti kata terlarang dengan bintang ── */
+  window._censorText=function(text){
+    if(!text)return text;
+    const norm=_normalize(text);
+    _RE.lastIndex=0;
+    // Map posisi kata terlarang di teks asli
+    let result=text;
+    const words=text.split(/\s+/);
+    return words.map(w=>{
+      const wn=_normalize(w);
+      _RE.lastIndex=0;
+      if(_RE.test(wn)){
+        return w[0]+'*'.repeat(Math.max(w.length-1,2));
+      }
+      return w;
+    }).join(' ');
+  };
+
+})();
 function sendComment(cardId){
   const inp=document.getElementById('cinput-'+cardId);
   const nameInp=document.getElementById('cname-'+cardId);
@@ -1928,13 +2116,24 @@ function sendComment(cardId){
   if(!inp)return;
   const raw=inp.value.trim();
   if(!raw){showToast('Tulis komentar dulu ya!',true);inp.focus();return;}
+  if(!_canComment(cardId))return;
+  /* ── Filter konten tidak sopan ── */
+  if(_containsBannedWord(raw)){
+    showToast('⚠️ Komentar mengandung kata yang tidak sopan. Mohon gunakan bahasa yang santun.',true);
+    inp.focus();return;
+  }
   const commenterName=(nameInp&&nameInp.value.trim())||'Anonim';
+  if(_containsBannedWord(commenterName)){
+    showToast('⚠️ Nama mengandung kata yang tidak pantas.',true);
+    if(nameInp)nameInp.focus();return;
+  }
   const commenterEmail=(emailInp&&emailInp.value.trim())||'';
   const cmts=getComments(cardId);
   const now=new Date();
   const timeStr=now.toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'})+' '+now.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
-  cmts.push({name:commenterName,email:commenterEmail,text:raw,time:timeStr});
+  cmts.push({name:commenterName,text:raw,time:timeStr}); // email tidak disimpan di client
   saveComments(cardId,cmts);
+  _markComment(cardId);
   inp.value='';
   const listEl=document.getElementById('clist-'+cardId);
   if(listEl){
@@ -1964,8 +2163,7 @@ function sendComment(cardId){
       commenterName,
       commenterEmail,
       commentText: raw,
-      commentTime: timeStr,
-      pageUrl: window.location.href
+      commentTime: timeStr
     }),
     headers:{'Content-Type':'application/json'}
   }).catch(()=>{/* notif gagal — komentar tetap tersimpan lokal */});
@@ -1980,6 +2178,42 @@ document.addEventListener('visibilitychange',()=>{
     /* Tab aktif lagi: langsung refresh sekali, lalu jadwalkan ulang */
     loadAlumniData(false);
     refreshTimer=setInterval(()=>loadAlumniData(false),10*60*1000);
+  }
+});
+
+
+/* ── EVENT DELEGATION — menggantikan semua inline onclick di HTML ── */
+document.addEventListener('click',function(e){
+  const el=e.target.closest('[data-page],[data-action]');
+  if(!el)return;
+  const page=el.dataset.page;
+  const action=el.dataset.action;
+  const scroll=el.dataset.scroll;
+  if(page){
+    e.preventDefault();
+    showPage(page);
+    if(scroll){
+      setTimeout(()=>document.getElementById(scroll)?.scrollIntoView({behavior:'smooth'}),120);
+    }
+  }
+  if(action==='refresh') loadAlumniData(true);
+  if(action==='submit') submitForm();
+  if(action==='close-success') closeSuccess();
+  if(action==='share-wa') shareWhatsApp();
+  if(action==='status-change') handleStatusChange();
+  if(action==='stories-prev') storiesPage(-1);
+  if(action==='stories-next') storiesPage(1);
+});
+
+document.addEventListener('change',function(e){
+  if(e.target.dataset.action==='status-change') handleStatusChange();
+});
+
+document.addEventListener('input',function(e){
+  const el=e.target;
+  if(el.dataset.counter){
+    const max=parseInt(el.dataset.max)||500;
+    updateCharCount(el,el.dataset.counter,max);
   }
 });
 
