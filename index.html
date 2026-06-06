@@ -7,6 +7,9 @@
 <meta name="referrer" content="strict-origin-when-cross-origin"/>
 <title>Alumni Tracker — SMK Ciledug Al-Musaddadiyah</title>
 <meta name="description" content="Pantau jejak alumni SMK CALM Garut dan daftarkan dirimu sebagai alumni."/>
+<meta name="generator" content="Alumni Tracker v2.3"/>
+<meta name="application-name" content="Alumni Tracker SMK CALM"/>
+<meta name="robots" content="index, follow"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <!-- Font kritis: hanya weight yg dipakai. Plus Jakarta Sans: 700/800/900 + 900i. DM Sans: 400/600 saja -->
@@ -1484,7 +1487,7 @@ function shareWhatsApp(){
   const nama=document.getElementById('s-nama').textContent;
   const tahun=document.getElementById('s-tahun').textContent;
   const jurusan=document.getElementById('s-jurusan').textContent;
-  const msg=encodeURIComponent(`Alhamdulillah, saya sudah mendaftar sebagai alumni SMK CALM Garut! 🎓\n\nNama: ${nama}\nJurusan: ${jurusan}\nAngkatan: ${tahun}\n\nAyo, alumni CALM lainnya juga daftar ya!\n👉 https://www.smkciledugalmusaddadiyah.sch.id/p/alumni-tracker.html`);
+  const msg=encodeURIComponent(`Alhamdulillah, saya sudah mendaftar sebagai alumni SMK CALM Garut! 🎓\n\nNama: ${nama}\nJurusan: ${jurusan}\nAngkatan: ${tahun}\n\nAyo, alumni CALM lainnya juga daftar ya!\n👉 https://www.smkciledugalmusaddadiyah.sch.id/alumni`);
   window.open('https://wa.me/?text='+msg,'_blank');
 }
 
